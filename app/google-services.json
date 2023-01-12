@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "686050927765",
-    "firebase_url": "https://budget-assistant-16134-default-rtdb.firebaseio.com",
-    "project_id": "budget-assistant-16134",
-    "storage_bucket": "budget-assistant-16134.appspot.com"
+    "project_number": "807556545611",
+    "firebase_url": "https://budget-assistant-4883d-default-rtdb.firebaseio.com",
+    "project_id": "budget-assistant-4883d",
+    "storage_bucket": "budget-assistant-4883d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:686050927765:android:3602582a9500fb947d279c",
+        "mobilesdk_app_id": "1:807556545611:android:9663178d0c862f4b70e1ce",
         "android_client_info": {
           "package_name": "pl.project.budgetassistant"
         }
       },
       "oauth_client": [
         {
-          "client_id": "686050927765-tvdah7q4b8re5uscui83811p7vgoe74a.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "pl.project.budgetassistant",
-            "certificate_hash": "d7f09f101474febab188606781e8a3e494ae97d5"
-          }
-        },
-        {
-          "client_id": "686050927765-3gsf02tcgj1t0tphlqninojjeclro6gj.apps.googleusercontent.com",
+          "client_id": "807556545611-3raa56thcn0tmgnqnq9melpnlflgn04e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDoa1kuuxbkT9rOIKrKeqoo4_8X7pzABdQ"
+          "current_key": "AIzaSyBVSRUpCELzvCdkiW3NWl6sg84h-S_VxGE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "686050927765-3gsf02tcgj1t0tphlqninojjeclro6gj.apps.googleusercontent.com",
+              "client_id": "807556545611-3raa56thcn0tmgnqnq9melpnlflgn04e.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
