@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "807556545611-11gbeg54i2u92vj72ne1qkk0g1uo176t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.project.budgetassistant",
+            "certificate_hash": "d7f09f101474febab188606781e8a3e494ae97d5"
+          }
+        },
+        {
+          "client_id": "807556545611-4663l07iao3edmtlaannqlbkj48t208f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.project.budgetassistant",
+            "certificate_hash": "159dc6f9ca077fc6d9a759425746d31fd4a22a52"
+          }
+        },
+        {
           "client_id": "807556545611-3raa56thcn0tmgnqnq9melpnlflgn04e.apps.googleusercontent.com",
           "client_type": 3
         }
