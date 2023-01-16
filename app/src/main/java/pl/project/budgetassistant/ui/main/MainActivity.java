@@ -16,7 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.ui.add_entry.AddExpenseActivity;
+import pl.project.budgetassistant.ui.add_expense.AddExpenseActivity;
 
 public class MainActivity extends AppCompatActivity {
 

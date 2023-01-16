@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.ui.add_entry;
+package pl.project.budgetassistant.ui.add_expense;
 
 import android.content.Context;
 import android.content.res.ColorStateList;

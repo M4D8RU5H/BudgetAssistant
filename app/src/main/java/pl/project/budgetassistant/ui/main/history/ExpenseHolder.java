@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import pl.project.budgetassistant.R;
 
-public class WalletEntryHolder extends RecyclerView.ViewHolder {
+public class ExpenseHolder extends RecyclerView.ViewHolder {
 
     final TextView dateTextView;
     final TextView moneyTextView;
@@ -16,7 +16,7 @@ public class WalletEntryHolder extends RecyclerView.ViewHolder {
     final ImageView iconImageView;
     public View view;
 
-    public WalletEntryHolder(View itemView) {
+    public ExpenseHolder(View itemView) {
         super(itemView);
         this.view = itemView;
         moneyTextView = itemView.findViewById(R.id.money_textview);

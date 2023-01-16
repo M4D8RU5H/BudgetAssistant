@@ -27,7 +27,7 @@
             android:name="pl.project.budgetassistant.ui.main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="pl.project.budgetassistant.ui.add_entry.AddExpenseActivity"
+            android:name="pl.project.budgetassistant.ui.add_expense.AddExpenseActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -29,10 +29,10 @@ import pl.project.budgetassistant.firebase.FirebaseElement;
 import pl.project.budgetassistant.firebase.FirebaseObserver;
 import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.firebase.models.User;
-import pl.project.budgetassistant.firebase.viewmodel_factories.WalletEntryViewModelFactory;
+import pl.project.budgetassistant.firebase.viewmodel_factories.ExpenseViewModelFactory;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
-import pl.project.budgetassistant.ui.add_entry.ExpenseCategoriesAdapter;
+import pl.project.budgetassistant.ui.add_expense.ExpenseCategoriesAdapter;
 import pl.project.budgetassistant.util.CurrencyHelper;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.firebase.models.Expense;
@@ -138,7 +138,7 @@ public class EditExpenseActivity extends BaseActivity {
         });
 
 
-        WalletEntryViewModelFactory.getModel(getUid(), walletId, this).observe(this, new FirebaseObserver<FirebaseElement<Expense>>() {
+        ExpenseViewModelFactory.getModel(getUid(), walletId, this).observe(this, new FirebaseObserver<FirebaseElement<Expense>>() {
             @Override
             public void onChanged(FirebaseElement<Expense> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -181,7 +181,6 @@ public class EditExpenseActivity extends BaseActivity {
                 (user.currency.leftSide ? 0 : (user.currency.symbol.length() + (user.currency.hasSpace ? 1 : 0))));
 
     }
-
 
     private void updateDate() {
         SimpleDateFormat dataFormatter = new SimpleDateFormat("yyyy-MM-dd");

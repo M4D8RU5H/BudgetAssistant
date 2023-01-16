@@ -24,7 +24,7 @@ import pl.project.budgetassistant.firebase.FirebaseElement;
 import pl.project.budgetassistant.firebase.FirebaseObserver;
 import pl.project.budgetassistant.firebase.ListDataSet;
 import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
-import pl.project.budgetassistant.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
+import pl.project.budgetassistant.firebase.viewmodel_factories.ExpensesHistoryViewModelFactory;
 import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.firebase.models.Expense;
 import pl.project.budgetassistant.util.CategoriesHelper;
@@ -32,7 +32,7 @@ import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.ui.main.history.edit_entry.EditExpenseActivity;
 import pl.project.budgetassistant.util.CurrencyHelper;
 
-public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<WalletEntryHolder> {
+public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHolder> {
 
     private final String uid;
     private final FragmentActivity fragmentActivity;
@@ -41,7 +41,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
     private User user;
     private boolean firstUserSync = false;
 
-    public WalletEntriesRecyclerViewAdapter(FragmentActivity fragmentActivity, String uid) {
+    public ExpensesRecyclerViewAdapter(FragmentActivity fragmentActivity, String uid) {
         this.fragmentActivity = fragmentActivity;
         this.uid = uid;
 
@@ -49,14 +49,14 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
             @Override
             public void onChanged(FirebaseElement<User> element) {
                 if(!element.hasNoError()) return;
-                WalletEntriesRecyclerViewAdapter.this.user = element.getElement();
+                ExpensesRecyclerViewAdapter.this.user = element.getElement();
                 if(!firstUserSync) {
-                    WalletEntriesHistoryViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
+                    ExpensesHistoryViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
                         @Override
                         public void onChanged(FirebaseElement<ListDataSet<Expense>> element) {
                             if(element.hasNoError()) {
                                 walletEntries = element.getElement();
-                                element.getElement().notifyRecycler(WalletEntriesRecyclerViewAdapter.this);
+                                element.getElement().notifyRecycler(ExpensesRecyclerViewAdapter.this);
 
                             }
                         }
@@ -70,14 +70,14 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
     }
 
     @Override
-    public WalletEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ExpenseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(fragmentActivity);
         View view = inflater.inflate(R.layout.history_listview_row, parent, false);
-        return new WalletEntryHolder(view);
+        return new ExpenseHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(WalletEntryHolder holder, int position) {
+    public void onBindViewHolder(ExpenseHolder holder, int position) {
         String id = walletEntries.getIDList().get(position);
         Expense expense = walletEntries.getList().get(position);
         Category category = CategoriesHelper.searchCategory(expense.categoryID);
@@ -105,7 +105,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(fragmentActivity, EditExpenseActivity.class);
-                intent.putExtra("wallet-entry-id", id);
+                intent.putExtra("expense-id", id);
                 fragmentActivity.startActivity(intent);
             }
         });
@@ -144,7 +144,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
     }
 
     public void setDateRange(Calendar calendarStart, Calendar calendarEnd) {
-        WalletEntriesHistoryViewModelFactory.getModel(uid, fragmentActivity).setDateFilter(calendarStart, calendarEnd);
+        ExpensesHistoryViewModelFactory.getModel(uid, fragmentActivity).setDateFilter(calendarStart, calendarEnd);
     }
 
 

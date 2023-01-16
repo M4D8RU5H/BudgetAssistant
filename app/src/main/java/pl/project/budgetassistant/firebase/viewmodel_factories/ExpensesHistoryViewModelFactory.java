@@ -12,10 +12,10 @@ import java.util.Calendar;
 
 import pl.project.budgetassistant.firebase.viewmodels.WalletEntriesBaseViewModel;
 
-public class WalletEntriesHistoryViewModelFactory implements ViewModelProvider.Factory {
+public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factory {
     private String uid;
 
-    WalletEntriesHistoryViewModelFactory(String uid) {
+    ExpensesHistoryViewModelFactory(String uid) {
         this.uid = uid;
     }
 
@@ -25,7 +25,7 @@ public class WalletEntriesHistoryViewModelFactory implements ViewModelProvider.F
     }
 
     public static Model getModel(String uid, FragmentActivity activity) {
-        return ViewModelProviders.of(activity, new WalletEntriesHistoryViewModelFactory(uid)).get(Model.class);
+        return ViewModelProviders.of(activity, new ExpensesHistoryViewModelFactory(uid)).get(Model.class);
     }
 
     public static class Model extends WalletEntriesBaseViewModel {

@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
+import pl.project.budgetassistant.firebase.viewmodel_factories.ExpensesHistoryViewModelFactory;
 import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.ui.options.OptionsActivity;
 
@@ -31,7 +31,7 @@ public class HistoryFragment extends BaseFragment {
     Calendar calendarStart;
     Calendar calendarEnd;
     private RecyclerView historyRecyclerView;
-    private WalletEntriesRecyclerViewAdapter historyRecyclerViewAdapter;
+    private ExpensesRecyclerViewAdapter historyRecyclerViewAdapter;
     private Menu menu;
     private TextView dividerTextView;
 
@@ -60,7 +60,7 @@ public class HistoryFragment extends BaseFragment {
         dividerTextView.setText("Last 100 elements:");
         historyRecyclerView = view.findViewById(R.id.history_recycler_view);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        historyRecyclerViewAdapter = new WalletEntriesRecyclerViewAdapter(getActivity(), getUid());
+        historyRecyclerViewAdapter = new ExpensesRecyclerViewAdapter(getActivity(), getUid());
         historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
 
         historyRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -98,7 +98,7 @@ public class HistoryFragment extends BaseFragment {
     private void updateCalendarIcon() {
         MenuItem calendarIcon = menu.findItem(R.id.action_date_range);
         if (calendarIcon == null) return;
-        WalletEntriesHistoryViewModelFactory.Model model = WalletEntriesHistoryViewModelFactory.getModel(getUid(), getActivity());
+        ExpensesHistoryViewModelFactory.Model model = ExpensesHistoryViewModelFactory.getModel(getUid(), getActivity());
         if (model.hasDateSet()) {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar_active));
 

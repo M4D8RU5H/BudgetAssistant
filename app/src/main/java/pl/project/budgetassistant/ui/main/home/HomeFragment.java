@@ -34,7 +34,7 @@ import pl.project.budgetassistant.util.CurrencyHelper;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.firebase.ListDataSet;
 import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
-import pl.project.budgetassistant.firebase.viewmodel_factories.TopWalletEntriesViewModelFactory;
+import pl.project.budgetassistant.firebase.viewmodel_factories.TopExpensesViewModelFactory;
 import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.libraries.Gauge;
 import pl.project.budgetassistant.firebase.models.Expense;
@@ -96,7 +96,7 @@ public class HomeFragment extends BaseFragment {
         favoriteListView.setAdapter(adapter);
 
 
-        TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
+        TopExpensesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
 
             @Override
             public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
@@ -117,7 +117,7 @@ public class HomeFragment extends BaseFragment {
 
                     Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
                     Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
-                    TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(startDate, endDate);
+                    TopExpensesViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(startDate, endDate);
                 }
             }
         });
@@ -185,7 +185,7 @@ public class HomeFragment extends BaseFragment {
         });
 
         adapter.notifyDataSetChanged();
-        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.analyzer.spentAmount));
+        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend + user.budget.analyzer.spentAmount)); //TODO Dostosować do wzorca
 
         gaugeLeftLine1TextView.setText(dateFormat.format(startDate.getTime()));
         gaugeLeftLine2TextView.setVisibility(View.INVISIBLE);

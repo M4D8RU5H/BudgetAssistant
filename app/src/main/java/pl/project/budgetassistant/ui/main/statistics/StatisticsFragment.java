@@ -39,7 +39,7 @@ import pl.project.budgetassistant.firebase.FirebaseObserver;
 import pl.project.budgetassistant.firebase.ListDataSet;
 import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.firebase.models.Expense;
-import pl.project.budgetassistant.firebase.viewmodel_factories.TopWalletEntriesStatisticsViewModelFactory;
+import pl.project.budgetassistant.firebase.viewmodel_factories.TopExpensesStatisticsViewModelFactory;
 import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.util.CalendarHelper;
 import pl.project.budgetassistant.util.CategoriesHelper;
@@ -95,7 +95,7 @@ public class StatisticsFragment extends BaseFragment {
         adapter = new TopCategoriesStatisticsAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        TopWalletEntriesStatisticsViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
+        TopExpensesStatisticsViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
 
             @Override
             public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
@@ -276,7 +276,7 @@ public class StatisticsFragment extends BaseFragment {
 
 
     private void calendarUpdated() {
-        TopWalletEntriesStatisticsViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
+        TopExpensesStatisticsViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
 
     }
 

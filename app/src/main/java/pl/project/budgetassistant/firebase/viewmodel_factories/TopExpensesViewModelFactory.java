@@ -11,19 +11,11 @@ import java.util.Calendar;
 
 import pl.project.budgetassistant.firebase.viewmodels.WalletEntriesBaseViewModel;
 
-public class TopWalletEntriesStatisticsViewModelFactory implements ViewModelProvider.Factory {
-    private Calendar endDate;
-    private Calendar startDate;
+public class TopExpensesViewModelFactory implements ViewModelProvider.Factory {
     private String uid;
 
-    TopWalletEntriesStatisticsViewModelFactory(String uid) {
+    TopExpensesViewModelFactory(String uid) {
         this.uid = uid;
-
-
-    }
-    public void setDate(Calendar startDate, Calendar endDate){
-        this.startDate=startDate;
-        this.endDate=endDate;
     }
 
     @Override
@@ -32,7 +24,7 @@ public class TopWalletEntriesStatisticsViewModelFactory implements ViewModelProv
     }
 
     public static Model getModel(String uid, FragmentActivity activity) {
-        return ViewModelProviders.of(activity, new TopWalletEntriesStatisticsViewModelFactory(uid)).get(Model.class);
+        return ViewModelProviders.of(activity, new TopExpensesViewModelFactory(uid)).get(Model.class);
     }
 
     public static class Model extends WalletEntriesBaseViewModel {
