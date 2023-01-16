@@ -198,7 +198,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceClick(Preference preference) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                 alert.setTitle("Set limit:");
-                View layout = getLayoutInflater().inflate(R.layout.set_limit_dialog, null);
+                View layout = getLayoutInflater().inflate(R.layout.set_budget_dialog, null);
                 TextInputEditText editText = layout.findViewById(R.id.edittext);
                 CurrencyHelper.setupAmountEditText(editText, user);
                 alert.setView(layout);

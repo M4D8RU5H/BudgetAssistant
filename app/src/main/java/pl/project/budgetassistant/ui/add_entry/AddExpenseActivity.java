@@ -46,7 +46,7 @@ public class AddExpenseActivity extends CircularRevealActivity {
     private TextInputLayout selectNameInputLayout;
 
     public AddExpenseActivity() {
-        super(R.layout.activity_add_wallet_entry, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
+        super(R.layout.activity_add_epense, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
     }
 
     @Override
