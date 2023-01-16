@@ -125,7 +125,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
                     public void onClick(DialogInterface dialog, int whichButton) {
                         FirebaseDatabase.getInstance().getReference()
                                 .child("wallet-entries").child(uid).child("default").child(id).removeValue();
-                        user.budget.amountToSpend -= balanceDifference;
+                        user.budget.analyzer.spentAmount-= balanceDifference;
                         UserProfileViewModelFactory.saveModel(uid, user);
                         dialog.dismiss();
                     }

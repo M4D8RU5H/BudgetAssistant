@@ -6,7 +6,6 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class UserSettings {
     public int dayOfMonthStart = 0;
     public int dayOfWeekStart = 0;
-    public long limit;
 
     public UserSettings() { }
 

@@ -192,7 +192,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
         });
 
         Preference limitPreference = findPreference(getString(R.string.pref_key_current_month_budget));
-        limitPreference.setSummary(CurrencyHelper.formatCurrency(user.currency, user.userSettings.limit));
+        limitPreference.setSummary(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend));
         limitPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -206,7 +206,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        user.userSettings.limit = CurrencyHelper.convertAmountStringToLong(editText.getText().toString());
+                        user.budget.amountToSpend = CurrencyHelper.convertAmountStringToLong(editText.getText().toString());
                         saveUser(user);
                     }
                 });

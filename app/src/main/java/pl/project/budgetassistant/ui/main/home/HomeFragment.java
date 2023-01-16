@@ -185,11 +185,11 @@ public class HomeFragment extends BaseFragment {
         });
 
         adapter.notifyDataSetChanged();
-        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend));
+        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.analyzer.spentAmount));
 
         gaugeLeftLine1TextView.setText(dateFormat.format(startDate.getTime()));
         gaugeLeftLine2TextView.setVisibility(View.INVISIBLE);
-        gaugeRightBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.userSettings.limit));
+        gaugeRightBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend));
         gaugeRightLine1TextView.setText(dateFormat.format(endDate.getTime()));
         gaugeRightLine2TextView.setVisibility(View.INVISIBLE);
 
@@ -197,7 +197,7 @@ public class HomeFragment extends BaseFragment {
         gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
         gauge.setStrokeColor(ContextCompat.getColor(getContext(), R.color.gauge_gray));
 
-        long limit = user.userSettings.limit;
+        long limit = user.budget.amountToSpend;
         long expenses = -expensesSumInDateRange;
         int percentage = (int) (expenses * 100 / (double) limit);
         if (percentage > 100) percentage = 100;

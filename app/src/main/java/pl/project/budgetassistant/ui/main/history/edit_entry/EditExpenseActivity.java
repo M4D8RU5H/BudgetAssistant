@@ -201,7 +201,7 @@ public class EditExpenseActivity extends BaseActivity {
         }
 
         long finalBalanceDifference = amount - expense.amount;
-        user.budget.amountToSpend += finalBalanceDifference;
+        user.budget.analyzer.spentAmount += finalBalanceDifference;
         UserProfileViewModelFactory.saveModel(getUid(), user);
 
         FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
@@ -210,7 +210,7 @@ public class EditExpenseActivity extends BaseActivity {
     }
 
     public void removeWalletEntry() {
-        user.budget.amountToSpend -= expense.amount;
+        user.budget.analyzer.spentAmount -= expense.amount;
         UserProfileViewModelFactory.saveModel(getUid(), user);
 
         FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
