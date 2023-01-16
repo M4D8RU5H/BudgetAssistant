@@ -272,7 +272,6 @@ public class StatisticsFragment extends BaseFragment {
             }
         });
         datePicker.show(getActivity().getFragmentManager(), "TAG");
-        //todo library doesn't respect other method than deprecated
     }
 
 

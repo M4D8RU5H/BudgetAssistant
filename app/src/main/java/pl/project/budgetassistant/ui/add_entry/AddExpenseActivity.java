@@ -142,7 +142,7 @@ public class AddExpenseActivity extends CircularRevealActivity {
 
         FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
                 .child("default").push().setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
-        user.wallet.sum += amount;
+        user.budget.amountToSpend += amount;
         UserProfileViewModelFactory.saveModel(getUid(), user);
         finishWithAnimation();
     }

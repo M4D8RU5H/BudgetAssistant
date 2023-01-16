@@ -25,7 +25,6 @@ import java.util.Map;
 
 import pl.project.budgetassistant.firebase.FirebaseElement;
 import pl.project.budgetassistant.firebase.FirebaseObserver;
-import pl.project.budgetassistant.firebase.models.UserSettings;
 import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.util.CalendarHelper;
 import pl.project.budgetassistant.util.CategoriesHelper;
@@ -186,7 +185,7 @@ public class HomeFragment extends BaseFragment {
         });
 
         adapter.notifyDataSetChanged();
-        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.wallet.sum));
+        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend));
 
         gaugeLeftLine1TextView.setText(dateFormat.format(startDate.getTime()));
         gaugeLeftLine2TextView.setVisibility(View.INVISIBLE);

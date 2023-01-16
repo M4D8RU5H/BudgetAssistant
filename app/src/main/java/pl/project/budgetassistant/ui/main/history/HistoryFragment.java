@@ -143,7 +143,6 @@ public class HistoryFragment extends BaseFragment {
             }
         });
         datePicker.show(getActivity().getFragmentManager(), "TAG");
-        //todo library doesn't respect other method than deprecated
     }
 
     private void calendarUpdated() {
