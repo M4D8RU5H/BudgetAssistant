@@ -14,13 +14,13 @@ import java.util.List;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.models.Category;
 
-public class EntryCategoriesAdapter extends ArrayAdapter<String> {
+public class ExpenseCategoriesAdapter extends ArrayAdapter<String> {
 
     private final List<Category> items;
     private final Context context;
 
-    public EntryCategoriesAdapter(Context context, int resource,
-                                  List objects) {
+    public ExpenseCategoriesAdapter(Context context, int resource,
+                                    List objects) {
         super(context, resource, 0, objects);
         this.context = context;
         items = objects;

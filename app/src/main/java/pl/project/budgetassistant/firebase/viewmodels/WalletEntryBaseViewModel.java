@@ -10,28 +10,28 @@ import com.google.firebase.database.FirebaseDatabase;
 import pl.project.budgetassistant.firebase.FirebaseElement;
 import pl.project.budgetassistant.firebase.FirebaseObserver;
 import pl.project.budgetassistant.firebase.FirebaseQueryLiveDataElement;
-import pl.project.budgetassistant.firebase.models.WalletEntry;
+import pl.project.budgetassistant.firebase.models.Expense;
 
 public class WalletEntryBaseViewModel extends ViewModel {
-    protected final FirebaseQueryLiveDataElement<WalletEntry> liveData;
+    protected final FirebaseQueryLiveDataElement<Expense> liveData;
     protected final String uid;
 
     public WalletEntryBaseViewModel(String uid, String walletEntryId) {
         this.uid=uid;
-        liveData = new FirebaseQueryLiveDataElement<>(WalletEntry.class, FirebaseDatabase.getInstance().getReference()
+        liveData = new FirebaseQueryLiveDataElement<>(Expense.class, FirebaseDatabase.getInstance().getReference()
                 .child("wallet-entries").child(uid).child("default").child(walletEntryId));    }
 
-    public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<WalletEntry>> observer) {
+    public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<Expense>> observer) {
         if(liveData.getValue() != null) observer.onChanged(liveData.getValue());
-        liveData.observe(owner, new Observer<FirebaseElement<WalletEntry>>() {
+        liveData.observe(owner, new Observer<FirebaseElement<Expense>>() {
             @Override
-            public void onChanged(@Nullable FirebaseElement<WalletEntry> element) {
+            public void onChanged(@Nullable FirebaseElement<Expense> element) {
                 if(element != null) observer.onChanged(element);
             }
         });
     }
 
-    public void removeObserver(Observer<FirebaseElement<WalletEntry>> observer) {
+    public void removeObserver(Observer<FirebaseElement<Expense>> observer) {
         liveData.removeObserver(observer);
     }
 

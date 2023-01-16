@@ -38,11 +38,11 @@ import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewMo
 import pl.project.budgetassistant.firebase.viewmodel_factories.TopWalletEntriesViewModelFactory;
 import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.libraries.Gauge;
-import pl.project.budgetassistant.firebase.models.WalletEntry;
+import pl.project.budgetassistant.firebase.models.Expense;
 
 public class HomeFragment extends BaseFragment {
     private User user;
-    private ListDataSet<WalletEntry> walletEntryListDataSet;
+    private ListDataSet<Expense> walletEntryListDataSet;
 
     public static final CharSequence TITLE = "Home";
     private Gauge gauge;
@@ -90,7 +90,6 @@ public class HomeFragment extends BaseFragment {
         gaugeRightBalanceTextView = view.findViewById(R.id.gauge_right_balance_text_view);
         gaugeRightLine1TextView = view.findViewById(R.id.gauge_right_line1_textview);
         gaugeRightLine2TextView = view.findViewById(R.id.gauge_right_line2_textview);
-        gaugeBalanceLeftTextView = view.findViewById(R.id.left_balance_textview);
 
 
         ListView favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
@@ -98,10 +97,10 @@ public class HomeFragment extends BaseFragment {
         favoriteListView.setAdapter(adapter);
 
 
-        TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
+        TopWalletEntriesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
 
             @Override
-            public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
+            public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
                     HomeFragment.this.walletEntryListDataSet = firebaseElement.getElement();
                     dataUpdated();
@@ -147,7 +146,7 @@ public class HomeFragment extends BaseFragment {
     private void dataUpdated() {
         if (user == null || walletEntryListDataSet == null) return;
 
-        List<WalletEntry> entryList = new ArrayList<>(walletEntryListDataSet.getList());
+        List<Expense> entryList = new ArrayList<>(walletEntryListDataSet.getList());
 
         Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
         Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
@@ -159,17 +158,17 @@ public class HomeFragment extends BaseFragment {
         long incomesSumInDateRange = 0;
 
         HashMap<Category, Long> categoryModels = new HashMap<>();
-        for (WalletEntry walletEntry : entryList) {
-            if (walletEntry.balanceDifference > 0) {
-                incomesSumInDateRange += walletEntry.balanceDifference;
+        for (Expense expense : entryList) {
+            if (expense.amount > 0) {
+                incomesSumInDateRange += expense.amount;
                 continue;
             }
-            expensesSumInDateRange += walletEntry.balanceDifference;
-            Category category = CategoriesHelper.searchCategory(walletEntry.categoryID);
+            expensesSumInDateRange += expense.amount;
+            Category category = CategoriesHelper.searchCategory(expense.categoryID);
             if (categoryModels.get(category) != null)
-                categoryModels.put(category, categoryModels.get(category) + walletEntry.balanceDifference);
+                categoryModels.put(category, categoryModels.get(category) + expense.amount);
             else
-                categoryModels.put(category, walletEntry.balanceDifference);
+                categoryModels.put(category, expense.amount);
 
         }
 
@@ -191,7 +190,6 @@ public class HomeFragment extends BaseFragment {
         totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.wallet.sum));
 
         if (user.userSettings.homeCounterType == UserSettings.HOME_COUNTER_TYPE_SHOW_LIMIT) {
-            gaugeLeftBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, 0));
             gaugeLeftLine1TextView.setText(dateFormat.format(startDate.getTime()));
             gaugeLeftLine2TextView.setVisibility(View.INVISIBLE);
             gaugeRightBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.userSettings.limit));
@@ -207,7 +205,6 @@ public class HomeFragment extends BaseFragment {
             int percentage = (int) (expenses * 100 / (double) limit);
             if (percentage > 100) percentage = 100;
             gauge.setValue(percentage);
-            gaugeBalanceLeftTextView.setText(CurrencyHelper.formatCurrency(user.currency, limit - expenses) + " left");
 
 
         } else {

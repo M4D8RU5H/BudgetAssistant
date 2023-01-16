@@ -3,7 +3,6 @@ package pl.project.budgetassistant.ui.main.history.edit_entry;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -19,7 +18,6 @@ import android.widget.TimePicker;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,14 +32,12 @@ import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.firebase.viewmodel_factories.WalletEntryViewModelFactory;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
-import pl.project.budgetassistant.ui.add_entry.EntryCategoriesAdapter;
-import pl.project.budgetassistant.ui.add_entry.EntryTypeListViewModel;
-import pl.project.budgetassistant.ui.add_entry.EntryTypesAdapter;
+import pl.project.budgetassistant.ui.add_entry.ExpenseCategoriesAdapter;
 import pl.project.budgetassistant.util.CurrencyHelper;
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.firebase.models.WalletEntry;
+import pl.project.budgetassistant.firebase.models.Expense;
 
-public class EditWalletEntryActivity extends BaseActivity {
+public class EditExpenseActivity extends BaseActivity {
 
     private Spinner selectCategorySpinner;
     private TextInputEditText selectNameEditText;
@@ -51,7 +47,7 @@ public class EditWalletEntryActivity extends BaseActivity {
     private TextView chooseTimeTextView;
     private Spinner selectTypeSpinner;
     private User user;
-    private WalletEntry walletEntry;
+    private Expense expense;
     private Button removeEntryButton;
     private Button editEntryButton;
     private String walletId;
@@ -71,7 +67,6 @@ public class EditWalletEntryActivity extends BaseActivity {
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectNameEditText = findViewById(R.id.select_name_edittext);
         selectNameInputLayout = findViewById(R.id.select_name_inputlayout);
-        selectTypeSpinner = findViewById(R.id.select_type_spinner);
         editEntryButton = findViewById(R.id.edit_entry_button);
         removeEntryButton = findViewById(R.id.remove_entry_button);
         chooseTimeTextView = findViewById(R.id.choose_time_textview);
@@ -80,15 +75,6 @@ public class EditWalletEntryActivity extends BaseActivity {
         selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
 
         choosedDate = Calendar.getInstance();
-
-        EntryTypesAdapter typeAdapter = new EntryTypesAdapter(this,
-                R.layout.new_entry_type_spinner_row, Arrays.asList(
-                new EntryTypeListViewModel("Expense", Color.parseColor("#ef5350"),
-                        R.drawable.money_icon),
-                new EntryTypeListViewModel("Income", Color.parseColor("#66bb6a"),
-                        R.drawable.money_icon)));
-
-        selectTypeSpinner.setAdapter(typeAdapter);
 
         updateDate();
         chooseDayTextView.setOnClickListener(new View.OnClickListener() {
@@ -105,13 +91,11 @@ public class EditWalletEntryActivity extends BaseActivity {
         });
 
 
-
         editEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    editWalletEntry(((selectTypeSpinner.getSelectedItemPosition() * 2) - 1) *
-                                    CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
+                    editWalletEntry(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
                             choosedDate.getTime(),
                             ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
                             selectNameEditText.getText().toString());
@@ -130,7 +114,7 @@ public class EditWalletEntryActivity extends BaseActivity {
             }
 
             public void showRemoveWalletEntryDialog() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditWalletEntryActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditExpenseActivity.this);
                 builder.setMessage("Are you sure?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -154,11 +138,11 @@ public class EditWalletEntryActivity extends BaseActivity {
         });
 
 
-        WalletEntryViewModelFactory.getModel(getUid(), walletId, this).observe(this, new FirebaseObserver<FirebaseElement<WalletEntry>>() {
+        WalletEntryViewModelFactory.getModel(getUid(), walletId, this).observe(this, new FirebaseObserver<FirebaseElement<Expense>>() {
             @Override
-            public void onChanged(FirebaseElement<WalletEntry> firebaseElement) {
+            public void onChanged(FirebaseElement<Expense> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
-                    walletEntry = firebaseElement.getElement();
+                    expense = firebaseElement.getElement();
                     dataUpdated();
                 }
             }
@@ -168,37 +152,29 @@ public class EditWalletEntryActivity extends BaseActivity {
     }
 
     public void dataUpdated() {
-        if (walletEntry == null || user == null) return;
+        if (expense == null || user == null) return;
 
         final List<Category> categories = CategoriesHelper.getCategories();
-        EntryCategoriesAdapter categoryAdapter = new EntryCategoriesAdapter(this,
+        ExpenseCategoriesAdapter categoryAdapter = new ExpenseCategoriesAdapter(this,
                 R.layout.new_entry_type_spinner_row, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCategorySpinner.setAdapter(categoryAdapter);
 
         CurrencyHelper.setupAmountEditText(selectAmountEditText, user);
-        choosedDate.setTimeInMillis(-walletEntry.timestamp);
+        choosedDate.setTimeInMillis(-expense.timestamp);
         updateDate();
-        selectNameEditText.setText(walletEntry.name);
-
-
-        selectTypeSpinner.post(new Runnable() {
-            @Override
-            public void run() {
-                if (walletEntry.balanceDifference < 0) selectTypeSpinner.setSelection(0);
-                else selectTypeSpinner.setSelection(1);            }
-        });
+        selectNameEditText.setText(expense.name);
 
         selectCategorySpinner.post(new Runnable() {
             @Override
             public void run() {
-                EntryCategoriesAdapter adapter = (EntryCategoriesAdapter) selectCategorySpinner.getAdapter();
-                selectCategorySpinner.setSelection(adapter.getItemIndex(walletEntry.categoryID));
+                ExpenseCategoriesAdapter adapter = (ExpenseCategoriesAdapter) selectCategorySpinner.getAdapter();
+                selectCategorySpinner.setSelection(adapter.getItemIndex(expense.categoryID));
             }
         });
 
 
-        long amount = Math.abs(walletEntry.balanceDifference);
+        long amount = Math.abs(expense.amount);
         String current = CurrencyHelper.formatCurrency(user.currency, amount);
         selectAmountEditText.setText(current);
         selectAmountEditText.setSelection(current.length() -
@@ -215,8 +191,8 @@ public class EditWalletEntryActivity extends BaseActivity {
         chooseTimeTextView.setText(dataFormatter2.format(choosedDate.getTime()));
     }
 
-    public void editWalletEntry(long balanceDifference, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException {
-        if (balanceDifference == 0) {
+    public void editWalletEntry(long amount, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException {
+        if (amount == 0) {
             throw new ZeroBalanceDifferenceException("Balance difference should not be 0");
         }
 
@@ -224,17 +200,17 @@ public class EditWalletEntryActivity extends BaseActivity {
             throw new EmptyStringException("Entry name length should be > 0");
         }
 
-        long finalBalanceDifference = balanceDifference - walletEntry.balanceDifference;
+        long finalBalanceDifference = amount - expense.amount;
         user.wallet.sum += finalBalanceDifference;
         UserProfileViewModelFactory.saveModel(getUid(), user);
 
         FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
-                .child("default").child(walletId).setValue(new WalletEntry(entryCategory, entryName, entryDate.getTime(), balanceDifference));
+                .child("default").child(walletId).setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
         finish();
     }
 
     public void removeWalletEntry() {
-        user.wallet.sum -= walletEntry.balanceDifference;
+        user.wallet.sum -= expense.amount;
         UserProfileViewModelFactory.saveModel(getUid(), user);
 
         FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())

@@ -38,7 +38,7 @@ import pl.project.budgetassistant.firebase.FirebaseElement;
 import pl.project.budgetassistant.firebase.FirebaseObserver;
 import pl.project.budgetassistant.firebase.ListDataSet;
 import pl.project.budgetassistant.firebase.models.User;
-import pl.project.budgetassistant.firebase.models.WalletEntry;
+import pl.project.budgetassistant.firebase.models.Expense;
 import pl.project.budgetassistant.firebase.viewmodel_factories.TopWalletEntriesStatisticsViewModelFactory;
 import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.util.CalendarHelper;
@@ -55,7 +55,7 @@ public class StatisticsFragment extends BaseFragment {
     private Calendar calendarStart;
     private Calendar calendarEnd;
     private User user;
-    private ListDataSet<WalletEntry> walletEntryListDataSet;
+    private ListDataSet<Expense> walletEntryListDataSet;
     private PieChart pieChart;
     private ArrayList<TopCategoryStatisticsListViewModel> categoryModelsHome;
     private TopCategoriesStatisticsAdapter adapter;
@@ -79,8 +79,6 @@ public class StatisticsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_statistics, container, false);
-
-
     }
 
     @Override
@@ -97,10 +95,10 @@ public class StatisticsFragment extends BaseFragment {
         adapter = new TopCategoriesStatisticsAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        TopWalletEntriesStatisticsViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
+        TopWalletEntriesStatisticsViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
 
             @Override
-            public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> firebaseElement) {
+            public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
                     StatisticsFragment.this.walletEntryListDataSet = firebaseElement.getElement();
                     dataUpdated();
@@ -132,23 +130,23 @@ public class StatisticsFragment extends BaseFragment {
 
     private void dataUpdated() {
         if (calendarStart != null && calendarEnd != null && walletEntryListDataSet != null) {
-            List<WalletEntry> entryList = new ArrayList<>(walletEntryListDataSet.getList());
+            List<Expense> entryList = new ArrayList<>(walletEntryListDataSet.getList());
 
             long expensesSumInDateRange = 0;
             long incomesSumInDateRange = 0;
 
             HashMap<Category, Long> categoryModels = new HashMap<>();
-            for (WalletEntry walletEntry : entryList) {
-                if (walletEntry.balanceDifference > 0) {
-                    incomesSumInDateRange += walletEntry.balanceDifference;
+            for (Expense expense : entryList) {
+                if (expense.amount > 0) {
+                    incomesSumInDateRange += expense.amount;
                     continue;
                 }
-                expensesSumInDateRange += walletEntry.balanceDifference;
-                Category category = CategoriesHelper.searchCategory(walletEntry.categoryID);
+                expensesSumInDateRange += expense.amount;
+                Category category = CategoriesHelper.searchCategory(expense.categoryID);
                 if (categoryModels.get(category) != null)
-                    categoryModels.put(category, categoryModels.get(category) + walletEntry.balanceDifference);
+                    categoryModels.put(category, categoryModels.get(category) + expense.amount);
                 else
-                    categoryModels.put(category, walletEntry.balanceDifference);
+                    categoryModels.put(category, expense.amount);
 
             }
 

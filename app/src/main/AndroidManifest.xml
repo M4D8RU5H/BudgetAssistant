@@ -27,7 +27,7 @@
             android:name="pl.project.budgetassistant.ui.main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="pl.project.budgetassistant.ui.add_entry.AddWalletEntryActivity"
+            android:name="pl.project.budgetassistant.ui.add_entry.AddExpenseActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -39,7 +39,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.project.budgetassistant.ui.main.MainActivity" />
         </activity>
-        <activity android:name="pl.project.budgetassistant.ui.main.history.edit_entry.EditWalletEntryActivity">
+        <activity android:name="pl.project.budgetassistant.ui.main.history.edit_entry.EditExpenseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.project.budgetassistant.ui.main.MainActivity" />

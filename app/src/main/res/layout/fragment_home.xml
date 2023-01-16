@@ -150,20 +150,6 @@
                 app:layout_constraintStart_toEndOf="@+id/gauge"
                 app:layout_constraintTop_toBottomOf="@+id/gauge" />
 
-            <TextView
-                android:id="@+id/left_balance_textview"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="1000 USD left"
-                android:textColor="#eceff1"
-                android:textSize="10dp"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toStartOf="@+id/gauge"
-                app:layout_constraintHorizontal_bias="0.501"
-                app:layout_constraintStart_toEndOf="@+id/gauge"
-                app:layout_constraintTop_toBottomOf="@+id/total_balance_textview" />
-
             <pl.project.budgetassistant.libraries.Gauge
                 android:id="@+id/gauge"
                 android:layout_width="0dp"

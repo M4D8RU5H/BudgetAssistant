@@ -26,17 +26,17 @@ import pl.project.budgetassistant.firebase.ListDataSet;
 import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.firebase.viewmodel_factories.WalletEntriesHistoryViewModelFactory;
 import pl.project.budgetassistant.firebase.models.User;
-import pl.project.budgetassistant.firebase.models.WalletEntry;
+import pl.project.budgetassistant.firebase.models.Expense;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
-import pl.project.budgetassistant.ui.main.history.edit_entry.EditWalletEntryActivity;
+import pl.project.budgetassistant.ui.main.history.edit_entry.EditExpenseActivity;
 import pl.project.budgetassistant.util.CurrencyHelper;
 
 public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<WalletEntryHolder> {
 
     private final String uid;
     private final FragmentActivity fragmentActivity;
-    private ListDataSet<WalletEntry> walletEntries;
+    private ListDataSet<Expense> walletEntries;
 
     private User user;
     private boolean firstUserSync = false;
@@ -51,9 +51,9 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
                 if(!element.hasNoError()) return;
                 WalletEntriesRecyclerViewAdapter.this.user = element.getElement();
                 if(!firstUserSync) {
-                    WalletEntriesHistoryViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<WalletEntry>>>() {
+                    WalletEntriesHistoryViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
                         @Override
-                        public void onChanged(FirebaseElement<ListDataSet<WalletEntry>> element) {
+                        public void onChanged(FirebaseElement<ListDataSet<Expense>> element) {
                             if(element.hasNoError()) {
                                 walletEntries = element.getElement();
                                 element.getElement().notifyRecycler(WalletEntriesRecyclerViewAdapter.this);
@@ -79,24 +79,24 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
     @Override
     public void onBindViewHolder(WalletEntryHolder holder, int position) {
         String id = walletEntries.getIDList().get(position);
-        WalletEntry walletEntry = walletEntries.getList().get(position);
-        Category category = CategoriesHelper.searchCategory(walletEntry.categoryID);
+        Expense expense = walletEntries.getList().get(position);
+        Category category = CategoriesHelper.searchCategory(expense.categoryID);
         holder.iconImageView.setImageResource(category.getIconResourceID());
         holder.iconImageView.setBackgroundTintList(ColorStateList.valueOf(category.getIconColor()));
         holder.categoryTextView.setText(category.getCategoryVisibleName(fragmentActivity));
-        holder.nameTextView.setText(walletEntry.name);
+        holder.nameTextView.setText(expense.name);
 
-        Date date = new Date(-walletEntry.timestamp);
+        Date date = new Date(-expense.timestamp);
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         holder.dateTextView.setText(dateFormat.format(date));
-        holder.moneyTextView.setText(CurrencyHelper.formatCurrency(user.currency, walletEntry.balanceDifference));
+        holder.moneyTextView.setText(CurrencyHelper.formatCurrency(user.currency, expense.amount));
         holder.moneyTextView.setTextColor(ContextCompat.getColor(fragmentActivity,
-                walletEntry.balanceDifference < 0 ? R.color.primary_text_expense : R.color.primary_text_income));
+                expense.amount < 0 ? R.color.primary_text_expense : R.color.primary_text_income));
 
         holder.view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                createDeleteDialog(id, uid, walletEntry.balanceDifference, fragmentActivity);
+                createDeleteDialog(id, uid, expense.amount, fragmentActivity);
                 return false;
             }
         });
@@ -104,7 +104,7 @@ public class WalletEntriesRecyclerViewAdapter extends RecyclerView.Adapter<Walle
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(fragmentActivity, EditWalletEntryActivity.class);
+                Intent intent = new Intent(fragmentActivity, EditExpenseActivity.class);
                 intent.putExtra("wallet-entry-id", id);
                 fragmentActivity.startActivity(intent);
             }

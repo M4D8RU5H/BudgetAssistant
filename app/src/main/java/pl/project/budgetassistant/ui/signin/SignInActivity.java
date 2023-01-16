@@ -1,13 +1,10 @@
 package pl.project.budgetassistant.ui.signin;
 
 import android.content.Intent;
-import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -32,7 +29,6 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-import pl.project.budgetassistant.Links;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.ui.main.MainActivity;
@@ -45,7 +41,6 @@ public class SignInActivity extends AppCompatActivity {
     private TextView errorTextView;
     private SignInButton signInButton;
     private View progressView;
-    private TextView privacyPolicyTextView;
 
 
     @Override
@@ -69,18 +64,6 @@ public class SignInActivity extends AppCompatActivity {
                 errorTextView.setText("");
             }
         });
-
-        SpannableStringBuilder spanTxt = new SpannableStringBuilder(
-                "By signing in, you are indicating that you have read and agree to the ");
-        spanTxt.append("privacy policy");
-        spanTxt.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(@NonNull View widget) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(Links.PRIVACY_POLICY_LINK));
-                startActivity(browserIntent);
-            }
-        }, spanTxt.length() - "privacy policy".length(), spanTxt.length(), 0);
 
         errorTextView = findViewById(R.id.error_textview);
     }

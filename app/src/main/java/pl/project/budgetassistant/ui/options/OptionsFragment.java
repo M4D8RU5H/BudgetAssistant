@@ -2,7 +2,6 @@ package pl.project.budgetassistant.ui.options;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.textfield.TextInputEditText;
 import androidx.appcompat.app.AlertDialog;
@@ -19,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import pl.project.budgetassistant.Links;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.exceptions.NumberRangeException;
 import pl.project.budgetassistant.ui.signin.SignInActivity;
@@ -62,16 +60,6 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 dataUpdated();
             }
         });
-        Preference policyPreference = findPreference(getString(R.string.pref_key_policy));
-        policyPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(Links.PRIVACY_POLICY_LINK));
-                startActivity(browserIntent);
-                return true;
-            }
-        });
-
 
         Preference logoutPreference = findPreference(getString(R.string.pref_key_logout));
         logoutPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -266,7 +254,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
 
         }
 
-        Preference limitPreference = findPreference(getString(R.string.pref_key_limit));
+        Preference limitPreference = findPreference(getString(R.string.pref_key_current_month_budget));
         limitPreference.setSummary(CurrencyHelper.formatCurrency(user.currency, user.userSettings.limit));
         limitPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

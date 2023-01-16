@@ -16,7 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.ui.add_entry.AddWalletEntryActivity;
+import pl.project.budgetassistant.ui.add_entry.AddExpenseActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ActivityOptions options =
                         ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, addEntryButton, addEntryButton.getTransitionName());
-                startActivity(new Intent(MainActivity.this, AddWalletEntryActivity.class), options.toBundle());
+                startActivity(new Intent(MainActivity.this, AddExpenseActivity.class), options.toBundle());
 
             }
         });

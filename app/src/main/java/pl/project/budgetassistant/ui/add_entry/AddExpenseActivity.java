@@ -2,7 +2,6 @@ package pl.project.budgetassistant.ui.add_entry;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -17,7 +16,6 @@ import android.widget.TimePicker;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,9 +31,9 @@ import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.util.CurrencyHelper;
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.firebase.models.WalletEntry;
+import pl.project.budgetassistant.firebase.models.Expense;
 
-public class AddWalletEntryActivity extends CircularRevealActivity {
+public class AddExpenseActivity extends CircularRevealActivity {
 
     private Spinner selectCategorySpinner;
     private TextInputEditText selectNameEditText;
@@ -43,12 +41,11 @@ public class AddWalletEntryActivity extends CircularRevealActivity {
     private TextInputEditText selectAmountEditText;
     private TextView chooseDayTextView;
     private TextView chooseTimeTextView;
-    private Spinner selectTypeSpinner;
     private User user;
     private TextInputLayout selectAmountInputLayout;
     private TextInputLayout selectNameInputLayout;
 
-    public AddWalletEntryActivity() {
+    public AddExpenseActivity() {
         super(R.layout.activity_add_wallet_entry, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
     }
 
@@ -61,7 +58,6 @@ public class AddWalletEntryActivity extends CircularRevealActivity {
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectNameEditText = findViewById(R.id.select_name_edittext);
         selectNameInputLayout = findViewById(R.id.select_name_inputlayout);
-        selectTypeSpinner = findViewById(R.id.select_type_spinner);
         Button addEntryButton = findViewById(R.id.add_entry_button);
         chooseTimeTextView = findViewById(R.id.choose_time_textview);
         chooseDayTextView = findViewById(R.id.choose_day_textview);
@@ -78,16 +74,6 @@ public class AddWalletEntryActivity extends CircularRevealActivity {
                 }
             }
         });
-
-
-        EntryTypesAdapter typeAdapter = new EntryTypesAdapter(this,
-                R.layout.new_entry_type_spinner_row, Arrays.asList(
-                new EntryTypeListViewModel("Expense", Color.parseColor("#ef5350"),
-                        R.drawable.money_icon),
-                new EntryTypeListViewModel("Income", Color.parseColor("#66bb6a"),
-                        R.drawable.money_icon)));
-
-        selectTypeSpinner.setAdapter(typeAdapter);
 
         updateDate();
         chooseDayTextView.setOnClickListener(new View.OnClickListener() {
@@ -108,8 +94,7 @@ public class AddWalletEntryActivity extends CircularRevealActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    addToWallet(((selectTypeSpinner.getSelectedItemPosition() * 2) - 1) *
-                                    CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
+                    addToWallet(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
                             chosenDate.getTime(),
                             ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
                             selectNameEditText.getText().toString());
@@ -128,7 +113,7 @@ public class AddWalletEntryActivity extends CircularRevealActivity {
         if (user == null) return;
 
         final List<Category> categories = CategoriesHelper.getCategories();
-        EntryCategoriesAdapter categoryAdapter = new EntryCategoriesAdapter(this,
+        ExpenseCategoriesAdapter categoryAdapter = new ExpenseCategoriesAdapter(this,
                 R.layout.new_entry_type_spinner_row, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCategorySpinner.setAdapter(categoryAdapter);
@@ -146,8 +131,8 @@ public class AddWalletEntryActivity extends CircularRevealActivity {
         chooseTimeTextView.setText(dataFormatter2.format(chosenDate.getTime()));
     }
 
-    public void addToWallet(long balanceDifference, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
-        if (balanceDifference == 0) {
+    public void addToWallet(long amount, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
+        if (amount == 0) {
             throw new ZeroBalanceDifferenceException("Balance difference should not be 0");
         }
 
@@ -156,8 +141,8 @@ public class AddWalletEntryActivity extends CircularRevealActivity {
         }
 
         FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
-                .child("default").push().setValue(new WalletEntry(entryCategory, entryName, entryDate.getTime(), balanceDifference));
-        user.wallet.sum += balanceDifference;
+                .child("default").push().setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
+        user.wallet.sum += amount;
         UserProfileViewModelFactory.saveModel(getUid(), user);
         finishWithAnimation();
     }

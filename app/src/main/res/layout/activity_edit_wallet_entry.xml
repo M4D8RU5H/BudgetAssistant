@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#212121"
-    tools:context=".ui.add_entry.AddWalletEntryActivity">
+    tools:context=".ui.add_entry.AddExpenseActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/activity_contact_fab"
@@ -63,20 +63,6 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="12dp"
-                        android:paddingTop="8dp"
-                        android:text="Choose type:"
-                        android:textColor="@color/help_text_material_light" />
-
-                    <Spinner
-                        android:id="@+id/select_type_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="72dp" />
 
                     <View
                         android:layout_width="match_parent"

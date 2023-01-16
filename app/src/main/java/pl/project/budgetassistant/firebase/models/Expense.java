@@ -3,19 +3,19 @@ package pl.project.budgetassistant.firebase.models;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-public class WalletEntry {
+public class Expense {
 
     public String categoryID;
     public String name;
     public long timestamp;
-    public long balanceDifference;
-    public WalletEntry() { }
+    public long amount;
+    public Expense() { }
 
-    public WalletEntry(String categoryID, String name, long timestamp, long balanceDifference) {
+    public Expense(String categoryID, String name, long timestamp, long balanceDifference) {
         this.categoryID = categoryID;
         this.name = name;
         this.timestamp = -timestamp;
-        this.balanceDifference = balanceDifference;
+        this.amount = balanceDifference;
     }
 
 }

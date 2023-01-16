@@ -12,7 +12,7 @@
             android:summary="Compare income and expenses"
             android:title="Homescreen counter period" />
         <Preference
-            android:key="@string/pref_key_limit"
+            android:key="@string/pref_key_current_month_budget"
             android:summary="120$"
             android:title="Limit" />
         <Preference
@@ -27,9 +27,6 @@
             android:key="@string/pref_key_first_week_day"
             android:summary="1"
             android:title="Set first week day" />
-        <Preference
-            android:key="@string/pref_key_policy"
-            android:title="Privacy policy" />
         <Preference
             android:key="@string/pref_key_logout"
             android:title="Logout" />
