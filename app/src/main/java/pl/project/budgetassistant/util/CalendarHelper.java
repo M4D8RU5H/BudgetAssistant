@@ -14,15 +14,9 @@ public class CalendarHelper {
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-        if (user.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
-            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-            if (new Date().getTime() < cal.getTime().getTime())
-                cal.add(Calendar.DATE, -7);
-        } else {
-            cal.set(Calendar.DAY_OF_MONTH, user.userSettings.dayOfMonthStart + 1);
-            if (new Date().getTime() < cal.getTime().getTime())
-                cal.add(Calendar.MONTH, -1);
-        }
+        cal.set(Calendar.DAY_OF_MONTH, user.userSettings.dayOfMonthStart + 1);
+        if (new Date().getTime() < cal.getTime().getTime())
+            cal.add(Calendar.MONTH, -1);
 
         return cal;
     }
@@ -34,12 +28,9 @@ public class CalendarHelper {
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         cal.clear(Calendar.MILLISECOND);
-        if (user.userSettings.homeCounterPeriod == UserSettings.HOME_COUNTER_PERIOD_WEEKLY) {
-            cal.add(Calendar.DATE, 6);
-        } else {
-            cal.add(Calendar.MONTH, 1);
-            cal.add(Calendar.DATE, -1);
-        }
+        cal.add(Calendar.MONTH, 1);
+        cal.add(Calendar.DATE, -1);
+
         return cal;
     }
 
