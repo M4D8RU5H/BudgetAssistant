@@ -191,38 +191,6 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             }
         });
 
-
-        {
-            Preference counterTypePreference = findPreference(getString(R.string.pref_key_counter_type));
-            View layout = getLayoutInflater().inflate(R.layout.set_counter_type_dialog, null);
-            RadioGroup radioGroup = layout.findViewById(R.id.radio_group);
-            counterTypePreference.setSummary(((RadioButton) radioGroup.getChildAt(user.userSettings.homeCounterType)).getText());
-            counterTypePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    View layout = getLayoutInflater().inflate(R.layout.set_counter_type_dialog, null);
-                    RadioGroup radioGroup = layout.findViewById(R.id.radio_group);
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setTitle("Set counter type:");
-                    ((RadioButton) radioGroup.getChildAt(user.userSettings.homeCounterType)).setChecked(true);
-                    alert.setView(layout);
-                    alert.setNegativeButton("Cancel", null);
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            int index = radioGroup.indexOfChild(layout.findViewById(radioGroup.getCheckedRadioButtonId()));
-                            user.userSettings.homeCounterType = index;
-                            saveUser(user);
-                        }
-                    });
-                    alert.create().show();
-                    return true;
-                }
-            });
-
-        }
-
         Preference limitPreference = findPreference(getString(R.string.pref_key_current_month_budget));
         limitPreference.setSummary(CurrencyHelper.formatCurrency(user.currency, user.userSettings.limit));
         limitPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -247,8 +215,6 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
-
-
     }
 
     private String getDayString(int dayOfWeek) {

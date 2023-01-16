@@ -4,10 +4,6 @@
     <PreferenceCategory
         android:title="General">
         <Preference
-            android:key="@string/pref_key_counter_type"
-            android:summary="Compare income and expenses"
-            android:title="Homescreen counter type" />
-        <Preference
             android:key="@string/pref_key_current_month_budget"
             android:summary="120$"
             android:title="Limit" />
