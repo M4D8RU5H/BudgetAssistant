@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
 
 
-        FloatingActionButton addEntryButton = findViewById(R.id.add_wallet_entry_fab);
+        FloatingActionButton addEntryButton = findViewById(R.id.add_expense_fab);
         addEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

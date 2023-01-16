@@ -36,7 +36,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
 
     private final String uid;
     private final FragmentActivity fragmentActivity;
-    private ListDataSet<Expense> walletEntries;
+    private ListDataSet<Expense> expenses;
 
     private User user;
     private boolean firstUserSync = false;
@@ -55,7 +55,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
                         @Override
                         public void onChanged(FirebaseElement<ListDataSet<Expense>> element) {
                             if(element.hasNoError()) {
-                                walletEntries = element.getElement();
+                                expenses = element.getElement();
                                 element.getElement().notifyRecycler(ExpensesRecyclerViewAdapter.this);
 
                             }
@@ -78,8 +78,8 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
 
     @Override
     public void onBindViewHolder(ExpenseHolder holder, int position) {
-        String id = walletEntries.getIDList().get(position);
-        Expense expense = walletEntries.getList().get(position);
+        String id = expenses.getIDList().get(position);
+        Expense expense = expenses.getList().get(position);
         Category category = CategoriesHelper.searchCategory(expense.categoryID);
         holder.iconImageView.setImageResource(category.getIconResourceID());
         holder.iconImageView.setBackgroundTintList(ColorStateList.valueOf(category.getIconColor()));
@@ -113,8 +113,8 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
 
     @Override
     public int getItemCount() {
-        if (walletEntries == null) return 0;
-        return walletEntries.getList().size();
+        if (expenses == null) return 0;
+        return expenses.getList().size();
     }
 
     private void createDeleteDialog(String id, String uid, long balanceDifference, Context context) {
@@ -124,7 +124,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         FirebaseDatabase.getInstance().getReference()
-                                .child("wallet-entries").child(uid).child("default").child(id).removeValue();
+                                .child("expenses").child(uid).child(id).removeValue();
                         user.budget.analyzer.spentAmount-= balanceDifference;
                         UserProfileViewModelFactory.saveModel(uid, user);
                         dialog.dismiss();

@@ -12,14 +12,14 @@ import pl.project.budgetassistant.firebase.FirebaseObserver;
 import pl.project.budgetassistant.firebase.FirebaseQueryLiveDataElement;
 import pl.project.budgetassistant.firebase.models.Expense;
 
-public class WalletEntryBaseViewModel extends ViewModel {
+public class ExpenseBaseViewModel extends ViewModel {
     protected final FirebaseQueryLiveDataElement<Expense> liveData;
     protected final String uid;
 
-    public WalletEntryBaseViewModel(String uid, String walletEntryId) {
+    public ExpenseBaseViewModel(String uid, String expenseId) {
         this.uid=uid;
         liveData = new FirebaseQueryLiveDataElement<>(Expense.class, FirebaseDatabase.getInstance().getReference()
-                .child("wallet-entries").child(uid).child("default").child(walletEntryId));    }
+                .child("expenses").child(uid).child(expenseId));    }
 
     public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<Expense>> observer) {
         if(liveData.getValue() != null) observer.onChanged(liveData.getValue());

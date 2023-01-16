@@ -55,7 +55,7 @@ public class StatisticsFragment extends BaseFragment {
     private Calendar calendarStart;
     private Calendar calendarEnd;
     private User user;
-    private ListDataSet<Expense> walletEntryListDataSet;
+    private ListDataSet<Expense> expenseListDataSet;
     private PieChart pieChart;
     private ArrayList<TopCategoryStatisticsListViewModel> categoryModelsHome;
     private TopCategoriesStatisticsAdapter adapter;
@@ -100,7 +100,7 @@ public class StatisticsFragment extends BaseFragment {
             @Override
             public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
-                    StatisticsFragment.this.walletEntryListDataSet = firebaseElement.getElement();
+                    StatisticsFragment.this.expenseListDataSet = firebaseElement.getElement();
                     dataUpdated();
                 }
             }
@@ -129,8 +129,8 @@ public class StatisticsFragment extends BaseFragment {
 
 
     private void dataUpdated() {
-        if (calendarStart != null && calendarEnd != null && walletEntryListDataSet != null) {
-            List<Expense> entryList = new ArrayList<>(walletEntryListDataSet.getList());
+        if (calendarStart != null && calendarEnd != null && expenseListDataSet != null) {
+            List<Expense> entryList = new ArrayList<>(expenseListDataSet.getList());
 
             long expensesSumInDateRange = 0;
             long incomesSumInDateRange = 0;

@@ -34,7 +34,7 @@
     <include layout="@layout/content_main_menu" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:transitionName="transition_reveal"
-        android:id="@+id/add_wallet_entry_fab"
+        android:id="@+id/add_expense_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

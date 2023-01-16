@@ -50,7 +50,7 @@ public class EditExpenseActivity extends BaseActivity {
     private Expense expense;
     private Button removeEntryButton;
     private Button editEntryButton;
-    private String walletId;
+    private String expenseId;
     private TextInputLayout selectAmountInputLayout;
     private TextInputLayout selectNameInputLayout;
 
@@ -60,9 +60,9 @@ public class EditExpenseActivity extends BaseActivity {
         setContentView(R.layout.activity_edit_expense);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Edit wallet entry");
+        getSupportActionBar().setTitle("Edit expense");
 
-        walletId = getIntent().getExtras().getString("wallet-entry-id");
+        expenseId = getIntent().getExtras().getString("expense-id");
 
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectNameEditText = findViewById(R.id.select_name_edittext);
@@ -95,7 +95,7 @@ public class EditExpenseActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    editWalletEntry(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
+                    editExpense(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
                             choosedDate.getTime(),
                             ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
                             selectNameEditText.getText().toString());
@@ -110,15 +110,15 @@ public class EditExpenseActivity extends BaseActivity {
         removeEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showRemoveWalletEntryDialog();
+                showRemoveExpenseDialog();
             }
 
-            public void showRemoveWalletEntryDialog() {
+            public void showRemoveExpenseDialog() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditExpenseActivity.this);
                 builder.setMessage("Are you sure?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        removeWalletEntry();
+                        removeExpense();
                     }
                 }).setNegativeButton("No", null).show();
 
@@ -138,7 +138,7 @@ public class EditExpenseActivity extends BaseActivity {
         });
 
 
-        ExpenseViewModelFactory.getModel(getUid(), walletId, this).observe(this, new FirebaseObserver<FirebaseElement<Expense>>() {
+        ExpenseViewModelFactory.getModel(getUid(), expenseId, this).observe(this, new FirebaseObserver<FirebaseElement<Expense>>() {
             @Override
             public void onChanged(FirebaseElement<Expense> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -190,7 +190,7 @@ public class EditExpenseActivity extends BaseActivity {
         chooseTimeTextView.setText(dataFormatter2.format(choosedDate.getTime()));
     }
 
-    public void editWalletEntry(long amount, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException {
+    public void editExpense(long amount, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException {
         if (amount == 0) {
             throw new ZeroBalanceDifferenceException("Balance difference should not be 0");
         }
@@ -203,17 +203,17 @@ public class EditExpenseActivity extends BaseActivity {
         user.budget.analyzer.spentAmount += finalBalanceDifference;
         UserProfileViewModelFactory.saveModel(getUid(), user);
 
-        FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
-                .child("default").child(walletId).setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
+        FirebaseDatabase.getInstance().getReference().child("expenses").child(getUid())
+                .child(expenseId).setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
         finish();
     }
 
-    public void removeWalletEntry() {
+    public void removeExpense() {
         user.budget.analyzer.spentAmount -= expense.amount;
         UserProfileViewModelFactory.saveModel(getUid(), user);
 
-        FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
-                .child("default").child(walletId).removeValue();
+        FirebaseDatabase.getInstance().getReference().child("expenses").child(getUid())
+                .child(expenseId).removeValue();
         finish();
     }
 

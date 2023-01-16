@@ -6,7 +6,7 @@
         ".read": "$uid === auth.uid"
       }
     },
-    "wallet-entries": {
+    "expenses": {
       "$uid": {
         ".write": "$uid === auth.uid",
         ".read": "$uid === auth.uid"

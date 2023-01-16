@@ -41,7 +41,7 @@ import pl.project.budgetassistant.firebase.models.Expense;
 
 public class HomeFragment extends BaseFragment {
     private User user;
-    private ListDataSet<Expense> walletEntryListDataSet;
+    private ListDataSet<Expense> expenseListDataSet;
 
     public static final CharSequence TITLE = "Home";
     private Gauge gauge;
@@ -101,7 +101,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
-                    HomeFragment.this.walletEntryListDataSet = firebaseElement.getElement();
+                    HomeFragment.this.expenseListDataSet = firebaseElement.getElement();
                     dataUpdated();
                 }
             }
@@ -143,9 +143,9 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void dataUpdated() {
-        if (user == null || walletEntryListDataSet == null) return;
+        if (user == null || expenseListDataSet == null) return;
 
-        List<Expense> entryList = new ArrayList<>(walletEntryListDataSet.getList());
+        List<Expense> entryList = new ArrayList<>(expenseListDataSet.getList());
 
         Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
         Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);

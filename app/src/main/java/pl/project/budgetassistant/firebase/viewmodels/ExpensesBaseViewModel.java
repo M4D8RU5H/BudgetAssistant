@@ -13,11 +13,11 @@ import pl.project.budgetassistant.firebase.FirebaseQueryLiveDataSet;
 import pl.project.budgetassistant.firebase.ListDataSet;
 import pl.project.budgetassistant.firebase.models.Expense;
 
-public class WalletEntriesBaseViewModel extends ViewModel {
+public class ExpensesBaseViewModel extends ViewModel {
     protected final FirebaseQueryLiveDataSet<Expense> liveData;
     protected final String uid;
 
-    public WalletEntriesBaseViewModel(String uid, Query query) {
+    public ExpensesBaseViewModel(String uid, Query query) {
         this.uid=uid;
         liveData = new FirebaseQueryLiveDataSet<>(Expense.class, query);
     }

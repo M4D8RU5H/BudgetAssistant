@@ -9,7 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
-import pl.project.budgetassistant.firebase.viewmodels.WalletEntriesBaseViewModel;
+import pl.project.budgetassistant.firebase.viewmodels.ExpensesBaseViewModel;
 
 public class TopExpensesViewModelFactory implements ViewModelProvider.Factory {
     private String uid;
@@ -27,16 +27,16 @@ public class TopExpensesViewModelFactory implements ViewModelProvider.Factory {
         return ViewModelProviders.of(activity, new TopExpensesViewModelFactory(uid)).get(Model.class);
     }
 
-    public static class Model extends WalletEntriesBaseViewModel {
+    public static class Model extends ExpensesBaseViewModel {
 
         public Model(String uid) {
             super(uid, FirebaseDatabase.getInstance().getReference()
-                    .child("wallet-entries").child(uid).child("default").orderByChild("timestamp"));
+                    .child("expenses").child(uid).orderByChild("timestamp"));
         }
 
         public void setDateFilter(Calendar startDate, Calendar endDate) {
             liveData.setQuery(FirebaseDatabase.getInstance().getReference()
-                    .child("wallet-entries").child(uid).child("default").orderByChild("timestamp")
+                    .child("expenses").child(uid).orderByChild("timestamp")
                     .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis()));
         }
     }

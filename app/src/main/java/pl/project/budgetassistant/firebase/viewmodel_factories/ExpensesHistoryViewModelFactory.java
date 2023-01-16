@@ -10,7 +10,7 @@ import com.google.firebase.database.Query;
 
 import java.util.Calendar;
 
-import pl.project.budgetassistant.firebase.viewmodels.WalletEntriesBaseViewModel;
+import pl.project.budgetassistant.firebase.viewmodels.ExpensesBaseViewModel;
 
 public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factory {
     private String uid;
@@ -28,7 +28,7 @@ public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factor
         return ViewModelProviders.of(activity, new ExpensesHistoryViewModelFactory(uid)).get(Model.class);
     }
 
-    public static class Model extends WalletEntriesBaseViewModel {
+    public static class Model extends ExpensesBaseViewModel {
 
         private Calendar endDate;
         private Calendar startDate;
@@ -39,7 +39,7 @@ public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factor
 
         private static Query getDefaultQuery(String uid) {
             return FirebaseDatabase.getInstance().getReference()
-                    .child("wallet-entries").child(uid).child("default").orderByChild("timestamp").limitToFirst(500);
+                    .child("expenses").child(uid).orderByChild("timestamp").limitToFirst(500);
         }
 
         public void setDateFilter(Calendar startDate, Calendar endDate) {
@@ -47,7 +47,7 @@ public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factor
             this.endDate = endDate;
             if (startDate != null && endDate != null) {
                 liveData.setQuery(FirebaseDatabase.getInstance().getReference()
-                        .child("wallet-entries").child(uid).child("default").orderByChild("timestamp")
+                        .child("expenses").child(uid).orderByChild("timestamp")
                         .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis()));
             } else {
                 liveData.setQuery(getDefaultQuery(uid));

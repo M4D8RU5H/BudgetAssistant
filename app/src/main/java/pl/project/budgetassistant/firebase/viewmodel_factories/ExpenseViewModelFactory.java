@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.fragment.app.FragmentActivity;
 
-import pl.project.budgetassistant.firebase.viewmodels.WalletEntryBaseViewModel;
+import pl.project.budgetassistant.firebase.viewmodels.ExpenseBaseViewModel;
 
 public class ExpenseViewModelFactory implements ViewModelProvider.Factory {
     private final String entryId;
@@ -18,11 +18,11 @@ public class ExpenseViewModelFactory implements ViewModelProvider.Factory {
     }
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) new WalletEntryBaseViewModel(uid, entryId);
+        return (T) new ExpenseBaseViewModel(uid, entryId);
     }
 
-    public static WalletEntryBaseViewModel getModel(String uid, String entryId, FragmentActivity activity) {
-        return ViewModelProviders.of(activity, new ExpenseViewModelFactory(uid, entryId)).get(WalletEntryBaseViewModel.class);
+    public static ExpenseBaseViewModel getModel(String uid, String entryId, FragmentActivity activity) {
+        return ViewModelProviders.of(activity, new ExpenseViewModelFactory(uid, entryId)).get(ExpenseBaseViewModel.class);
     }
 
 

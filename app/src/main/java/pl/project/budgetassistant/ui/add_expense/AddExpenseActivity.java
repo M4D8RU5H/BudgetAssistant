@@ -53,7 +53,7 @@ public class AddExpenseActivity extends CircularRevealActivity {
     public void onInitialized(Bundle savedInstanceState) {
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Add wallet entry");
+        getSupportActionBar().setTitle("Add expense");
 
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectNameEditText = findViewById(R.id.select_name_edittext);
@@ -94,7 +94,7 @@ public class AddExpenseActivity extends CircularRevealActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    addToWallet(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
+                    addExpense(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
                             chosenDate.getTime(),
                             ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
                             selectNameEditText.getText().toString());
@@ -131,7 +131,7 @@ public class AddExpenseActivity extends CircularRevealActivity {
         chooseTimeTextView.setText(dataFormatter2.format(chosenDate.getTime()));
     }
 
-    public void addToWallet(long amount, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
+    public void addExpense(long amount, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
         if (amount == 0) {
             throw new ZeroBalanceDifferenceException("Balance difference should not be 0");
         }
@@ -140,8 +140,8 @@ public class AddExpenseActivity extends CircularRevealActivity {
             throw new EmptyStringException("Entry name length should be > 0");
         }
 
-        FirebaseDatabase.getInstance().getReference().child("wallet-entries").child(getUid())
-                .child("default").push().setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
+        FirebaseDatabase.getInstance().getReference().child("expenses").child(getUid())
+                .push().setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
         user.budget.analyzer.spentAmount += amount;
         UserProfileViewModelFactory.saveModel(getUid(), user);
         finishWithAnimation();
