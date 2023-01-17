@@ -29,7 +29,7 @@ import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.firebase.models.Expense;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
-import pl.project.budgetassistant.ui.main.history.edit_entry.EditExpenseActivity;
+import pl.project.budgetassistant.ui.main.history.edit_expense.EditExpenseActivity;
 import pl.project.budgetassistant.util.CurrencyHelper;
 
 public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHolder> {

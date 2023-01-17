@@ -29,6 +29,7 @@ public class FirebaseQueryLiveDataElement<T> extends LiveData<FirebaseElement<T>
                 setListener();
             }
         };
+
         this.query = query;
     }
 

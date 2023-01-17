@@ -53,8 +53,6 @@ public class HomeFragment extends BaseFragment {
     private TextView gaugeLeftLine2TextView;
     private TextView gaugeRightBalanceTextView;
     private TextView gaugeRightLine1TextView;
-    private TextView gaugeRightLine2TextView;
-    private TextView gaugeBalanceLeftTextView;
 
     public static HomeFragment newInstance() {
 
@@ -86,13 +84,10 @@ public class HomeFragment extends BaseFragment {
         gaugeLeftLine2TextView = view.findViewById(R.id.gauge_left_line2_textview);
         gaugeRightBalanceTextView = view.findViewById(R.id.gauge_right_balance_text_view);
         gaugeRightLine1TextView = view.findViewById(R.id.gauge_right_line1_textview);
-        gaugeRightLine2TextView = view.findViewById(R.id.gauge_right_line2_textview);
-
 
         ListView favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
         adapter = new TopCategoriesAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
-
 
         TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
             @Override
@@ -103,7 +98,6 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         });
-
 
         UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
@@ -181,11 +175,10 @@ public class HomeFragment extends BaseFragment {
         adapter.notifyDataSetChanged();
         totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend + user.budget.analyzer.spentAmount)); //TODO Dostosować do wzorca
 
+        gaugeLeftBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.analyzer.spentAmount));
         gaugeLeftLine1TextView.setText(dateFormat.format(startDate.getTime()));
-        gaugeLeftLine2TextView.setVisibility(View.INVISIBLE);
         gaugeRightBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend));
         gaugeRightLine1TextView.setText(dateFormat.format(endDate.getTime()));
-        gaugeRightLine2TextView.setVisibility(View.INVISIBLE);
 
         gauge.setPointStartColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
         gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_white));

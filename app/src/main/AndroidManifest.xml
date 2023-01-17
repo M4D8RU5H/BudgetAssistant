@@ -39,7 +39,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.project.budgetassistant.ui.main.MainActivity" />
         </activity>
-        <activity android:name="pl.project.budgetassistant.ui.main.history.edit_entry.EditExpenseActivity">
+        <activity android:name="pl.project.budgetassistant.ui.main.history.edit_expense.EditExpenseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.project.budgetassistant.ui.main.MainActivity" />

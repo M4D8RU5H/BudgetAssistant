@@ -67,7 +67,8 @@ public class AddExpenseActivity extends CircularRevealActivity {
         selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
         chosenDate = Calendar.getInstance();
 
-        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this) //Z fabryki UserProfileBaseViewModel dostaję instancję tej klasy dla obencego użytkownika i dla bieżącej aktywności
+                .observe(this, new FirebaseObserver<FirebaseElement<User>>() { //nakazuje obserwowanie obiektowi klasy UserProfileBaseViewModel nowo stworzonego obiektu FirebaseObserver
             @Override
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -84,13 +85,13 @@ public class AddExpenseActivity extends CircularRevealActivity {
                 pickDate();
             }
         });
+
         chooseTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickTime();
             }
         });
-
 
         addEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,8 +108,6 @@ public class AddExpenseActivity extends CircularRevealActivity {
                 }
             }
         });
-
-
     }
 
     private void dateUpdated() {
@@ -121,7 +120,6 @@ public class AddExpenseActivity extends CircularRevealActivity {
         selectCategorySpinner.setAdapter(categoryAdapter);
 
         CurrencyHelper.setupAmountEditText(selectAmountEditText, user);
-
     }
 
 

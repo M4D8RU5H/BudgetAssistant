@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.ui.main.history.edit_entry;
+package pl.project.budgetassistant.ui.main.history.edit_expense;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -32,7 +32,6 @@ import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewMo
 import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.firebase.viewmodel_factories.ExpenseViewModelFactory;
 import pl.project.budgetassistant.models.DefaultCategories;
-import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.ui.add_expense.ExpenseCategoriesAdapter;
 import pl.project.budgetassistant.util.CurrencyHelper;

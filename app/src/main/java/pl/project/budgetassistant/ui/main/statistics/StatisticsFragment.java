@@ -60,12 +60,9 @@ public class StatisticsFragment extends BaseFragment {
     private ArrayList<TopCategoryStatisticsListViewModel> categoryModelsHome;
     private TopCategoriesStatisticsAdapter adapter;
     private TextView dividerTextView;
-    private ProgressBar incomesExpensesProgressBar;
-    private TextView incomesTextView;
     private TextView expensesTextView;
 
     public static StatisticsFragment newInstance() {
-
         return new StatisticsFragment();
     }
 
@@ -86,9 +83,7 @@ public class StatisticsFragment extends BaseFragment {
         pieChart = view.findViewById(R.id.pie_chart);
         dividerTextView = view.findViewById(R.id.divider_textview);
         View incomesExpensesView = view.findViewById(R.id.incomes_expenses_view);
-        incomesExpensesProgressBar = incomesExpensesView.findViewById(R.id.progress_bar);
         expensesTextView = incomesExpensesView.findViewById(R.id.expenses_textview);
-        incomesTextView = incomesExpensesView.findViewById(R.id.incomes_textview);
 
         categoryModelsHome = new ArrayList<>();
         ListView favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
@@ -133,14 +128,9 @@ public class StatisticsFragment extends BaseFragment {
             List<Expense> entryList = new ArrayList<>(expenseListDataSet.getList());
 
             long expensesSumInDateRange = 0;
-            long incomesSumInDateRange = 0;
 
             HashMap<Category, Long> categoryModels = new HashMap<>();
             for (Expense expense : entryList) {
-                if (expense.amount > 0) {
-                    incomesSumInDateRange += expense.amount;
-                    continue;
-                }
                 expensesSumInDateRange += expense.amount;
                 Category category = CategoriesHelper.searchCategory(expense.categoryId);
                 if (categoryModels.get(category) != null)
@@ -209,11 +199,6 @@ public class StatisticsFragment extends BaseFragment {
                     + "  -  " + dateFormat.format(calendarEnd.getTime()));
 
             expensesTextView.setText(CurrencyHelper.formatCurrency(user.currency, expensesSumInDateRange));
-            incomesTextView.setText(CurrencyHelper.formatCurrency(user.currency, incomesSumInDateRange));
-
-            float progress = 100 * incomesSumInDateRange / (float) (incomesSumInDateRange - expensesSumInDateRange);
-            incomesExpensesProgressBar.setProgress((int) progress);
-
         }
 
     }

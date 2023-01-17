@@ -16,8 +16,8 @@ public class UserProfileBaseViewModel extends ViewModel {
     private final FirebaseQueryLiveDataElement<User> liveData;
 
     public UserProfileBaseViewModel(String uid) {
-        liveData = new FirebaseQueryLiveDataElement<>(User.class, FirebaseDatabase.getInstance().getReference()
-                .child("users").child(uid));
+        liveData = new FirebaseQueryLiveDataElement<>(User.class,
+                FirebaseDatabase.getInstance().getReference().child("users").child(uid));
     }
 
     public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<User>> observer) {
@@ -30,5 +30,4 @@ public class UserProfileBaseViewModel extends ViewModel {
             }
         });
     }
-
 }

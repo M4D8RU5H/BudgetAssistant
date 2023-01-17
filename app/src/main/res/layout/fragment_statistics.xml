@@ -41,7 +41,7 @@
         </RelativeLayout>
         <include
             android:id="@+id/incomes_expenses_view"
-            layout="@layout/income_expenses_comparasion_row" />
+            layout="@layout/sum_of__expenses_row" />
 
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
