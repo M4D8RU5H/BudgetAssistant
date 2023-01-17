@@ -13,31 +13,31 @@
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Monday" />
+            android:text="Poniedziałek" />
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Tuesday" />
+            android:text="Wtorek" />
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Wednesday" />
+            android:text="Środa" />
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Thursday" />
+            android:text="Czwartek" />
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Friday" />
+            android:text="Piątek" />
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Saturday" />
+            android:text="Sobota" />
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Sunday" />
+            android:text="Niedziela" />
     </RadioGroup>
 
 </LinearLayout>

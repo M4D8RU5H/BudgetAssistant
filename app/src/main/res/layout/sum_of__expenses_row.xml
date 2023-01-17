@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
-            android:text="Expenses:"
+            android:text="Wydatki:"
             android:textColor="@color/primary_text_material_light"
             app:layout_constraintBottom_toTopOf="@+id/expenses_textview"
             app:layout_constraintEnd_toEndOf="parent"

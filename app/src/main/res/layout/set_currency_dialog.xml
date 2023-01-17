@@ -9,7 +9,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Currency">
+        android:hint="Waluta">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/currency_edittext"
@@ -24,13 +24,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Show currency symbol on left side" />
+        android:text="Pokaż symbol waluty z lewej strony" />
 
     <CheckBox
         android:id="@+id/add_space_currency_checkbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Add space bettwen money and currency symbol" />
+        android:text="Dodaj spację pomiędzy kwotą i symbolem waluty" />
 
 </LinearLayout>

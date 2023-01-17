@@ -195,7 +195,7 @@ public class StatisticsFragment extends BaseFragment {
 
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
 
-            dividerTextView.setText("Date range: " + dateFormat.format(calendarStart.getTime())
+            dividerTextView.setText("Przedział czasowy: " + dateFormat.format(calendarStart.getTime())
                     + "  -  " + dateFormat.format(calendarEnd.getTime()));
 
             expensesTextView.setText(CurrencyHelper.formatCurrency(user.currency, expensesSumInDateRange));

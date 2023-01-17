@@ -86,7 +86,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Set currency");
+                alert.setTitle("Waluta");
                 View layout = getLayoutInflater().inflate(R.layout.set_currency_dialog, null);
 
                 TextInputEditText currencyEditText = layout.findViewById(R.id.currency_edittext);
@@ -97,7 +97,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                 addSpaceCheckBox.setChecked(user.currency.hasSpace);
 
                 alert.setView(layout);
-                alert.setNegativeButton("Cancel", null);
+                alert.setNegativeButton("Anuluj", null);
 
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
@@ -120,12 +120,12 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Set first month day:");
+                alert.setTitle("Wybierz pierwszy dzień miesiąca:");
                 View layout = getLayoutInflater().inflate(R.layout.set_first_day_of_month_dialog, null);
                 TextInputEditText editText = layout.findViewById(R.id.edittext);
                 editText.setText("" + (user.userSettings.dayOfMonthStart + 1));
                 alert.setView(layout);
-                alert.setNegativeButton("Cancel", null);
+                alert.setNegativeButton("Anuluj", null);
                 alert.setPositiveButton("OK", null);
                 AlertDialog alertDialog = alert.create();
                 alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -148,7 +148,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
                             private void setDate(String s) throws NumberRangeException {
                                 int number = Integer.parseInt(s);
                                 if (number <= 0 || number >= 29) {
-                                    throw new NumberRangeException("Number must be in 1-29 range");
+                                    throw new NumberRangeException("Liczba musi być z zakresu 1-29");
                                 } else {
                                     user.userSettings.dayOfMonthStart = number - 1;
                                     saveUser(user);
@@ -169,12 +169,12 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Set limit:");
+                alert.setTitle("Ustaw limit:");
                 View layout = getLayoutInflater().inflate(R.layout.set_budget_dialog, null);
                 TextInputEditText editText = layout.findViewById(R.id.edittext);
                 CurrencyHelper.setupAmountEditText(editText, user);
                 alert.setView(layout);
-                alert.setNegativeButton("Cancel", null);
+                alert.setNegativeButton("Anuluj", null);
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -192,19 +192,19 @@ public class OptionsFragment extends PreferenceFragmentCompat {
     private String getDayString(int dayOfWeek) {
         switch (dayOfWeek) {
             case 0:
-                return "Monday";
+                return "Poniedziałek";
             case 1:
-                return "Tuesday";
+                return "Wtorek";
             case 2:
-                return "Wednesday";
+                return "Środa";
             case 3:
-                return "Thursday";
+                return "Czwartek";
             case 4:
-                return "Friday";
+                return "Piątek";
             case 5:
-                return "Saturday";
+                return "Sobota";
             case 6:
-                return "Sunday";
+                return "Niedziela";
         }
         return "";
     }

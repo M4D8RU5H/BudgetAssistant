@@ -55,7 +55,7 @@ public class AddExpenseActivity extends CircularRevealActivity {
     public void onInitialized(Bundle savedInstanceState) {
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Add expense");
+        getSupportActionBar().setTitle("Dodaj wydatek");
 
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
         selectNameEditText = findViewById(R.id.select_name_edittext);
@@ -133,11 +133,11 @@ public class AddExpenseActivity extends CircularRevealActivity {
 
     public void addExpense(long amount, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
         if (amount == 0) {
-            throw new ZeroBalanceDifferenceException("Balance difference should not be 0");
+            throw new ZeroBalanceDifferenceException("Różnica środków nie powinna wynosić 0");
         }
 
         if (entryName == null || entryName.length() == 0) {
-            throw new EmptyStringException("Entry name length should be > 0");
+            throw new EmptyStringException("Nazwa wpisu nie może być pusta");
         }
 
         FirebaseDatabase.getInstance().getReference().child("expenses").child(getCurrentUserUid())

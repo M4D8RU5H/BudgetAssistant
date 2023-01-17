@@ -6,7 +6,7 @@
         android:icon="@drawable/icon_calendar_active"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/action_options"
-        android:title="Options"
+        android:title="Opcje"
         android:icon="@drawable/icon_options"
         app:showAsAction="ifRoom"/>
 </menu>

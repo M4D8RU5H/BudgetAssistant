@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_options"
-        android:title="Options"
+        android:title="Opcje"
         android:icon="@drawable/icon_options"
         app:showAsAction="ifRoom"/>
 </menu>

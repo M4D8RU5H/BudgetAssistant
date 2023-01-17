@@ -27,7 +27,7 @@ import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.ui.options.OptionsActivity;
 
 public class HistoryFragment extends BaseFragment {
-    public static final CharSequence TITLE = "History";
+    public static final CharSequence TITLE = "Historia";
     Calendar calendarStart;
     Calendar calendarEnd;
     private RecyclerView historyRecyclerView;
@@ -57,7 +57,7 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         dividerTextView = view.findViewById(R.id.divider_textview);
-        dividerTextView.setText("Last 100 elements:");
+        dividerTextView.setText("OStatnie 100 elementów:");
         historyRecyclerView = view.findViewById(R.id.history_recycler_view);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         historyRecyclerViewAdapter = new ExpensesRecyclerViewAdapter(getActivity(), getCurrentUserUid());
@@ -104,12 +104,12 @@ public class HistoryFragment extends BaseFragment {
 
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
 
-            dividerTextView.setText("Date range: " + dateFormat.format(model.getStartDate().getTime())
+            dividerTextView.setText("Przedział czasowy: " + dateFormat.format(model.getStartDate().getTime())
                     + "  -  " + dateFormat.format(model.getEndDate().getTime()));
         } else {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar));
 
-            dividerTextView.setText("Last 100 elements:");
+            dividerTextView.setText("Ostatnie 100 elementów:");
         }
 
     }

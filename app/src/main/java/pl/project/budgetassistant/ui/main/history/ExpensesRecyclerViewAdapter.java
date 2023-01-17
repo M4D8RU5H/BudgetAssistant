@@ -120,8 +120,8 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
 
     private void createDeleteDialog(String id, String uid, long balanceDifference, Context context) {
         new AlertDialog.Builder(context)
-                .setMessage("Do you want to delete?")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                .setMessage("Czy chcesz usunąć?")
+                .setPositiveButton("Usuń", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         FirebaseDatabase.getInstance().getReference()

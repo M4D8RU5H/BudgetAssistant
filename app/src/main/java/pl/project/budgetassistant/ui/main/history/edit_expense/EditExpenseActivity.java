@@ -61,7 +61,7 @@ public class EditExpenseActivity extends BaseActivity {
         setContentView(R.layout.activity_edit_expense);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Edit expense");
+        getSupportActionBar().setTitle("Edytuj wydatek");
 
         expenseId = getIntent().getExtras().getString("expense-id");
 
@@ -116,12 +116,12 @@ public class EditExpenseActivity extends BaseActivity {
 
             public void showRemoveExpenseDialog() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditExpenseActivity.this);
-                builder.setMessage("Are you sure?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setMessage("Jesteś pewien?").setPositiveButton("Tak", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         removeExpense();
                     }
-                }).setNegativeButton("No", null).show();
+                }).setNegativeButton("Nie", null).show();
             }
         });
 
@@ -189,11 +189,11 @@ public class EditExpenseActivity extends BaseActivity {
 
     public void editExpense(long amount, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException {
         if (amount == 0) {
-            throw new ZeroBalanceDifferenceException("Balance difference should not be 0");
+            throw new ZeroBalanceDifferenceException("Różnica środków nie powinna wynosić 0");
         }
 
         if (entryName == null || entryName.length() == 0) {
-            throw new EmptyStringException("Entry name length should be > 0");
+            throw new EmptyStringException("Nazwa nie może być pusta");
         }
 
         long finalBalanceDifference = amount - expense.amount;

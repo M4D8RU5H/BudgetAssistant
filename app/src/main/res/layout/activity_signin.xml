@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="Please login with your Google account"
+        android:text="Zaloguj się za pomocą konta Google"
         android:textColor="@color/primary_text_material_light"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"

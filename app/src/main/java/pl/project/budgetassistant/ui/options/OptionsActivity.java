@@ -14,7 +14,7 @@ public class OptionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_options);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Options");
+        getSupportActionBar().setTitle("Opcje");
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {

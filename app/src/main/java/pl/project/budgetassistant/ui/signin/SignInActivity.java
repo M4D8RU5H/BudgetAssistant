@@ -93,7 +93,7 @@ public class SignInActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 e.printStackTrace();
                 hideProgressView();
-                loginError("Google sign in failed.");
+                loginError("Błąd podczas logowania.");
             }
         }
     }
@@ -108,7 +108,7 @@ public class SignInActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
-                            loginError("Firebase auth failed.");
+                            loginError("Błąd podczas autentykacji Firebase.");
                             hideProgressView();
                         }
                     }
@@ -137,7 +137,7 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                loginError("Firebase fetch user data failed.");
+                loginError("Błąd odświeżania danych.");
                 hideProgressView();
             }
         });
@@ -171,7 +171,7 @@ public class SignInActivity extends AppCompatActivity {
                     startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    errorTextView.setText("Firebase create user transaction failed.");
+                    errorTextView.setText("Błąd podczas tworzenia zapytania z bazą.");
                     hideProgressView();
                 }
             }

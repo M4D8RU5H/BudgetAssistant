@@ -33,7 +33,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
                 android:fontFamily="sans-serif-medium"
-                android:text="Incomes/expenses comparasion:"
+                android:text="Porównanie przychodów i wydatków:"
                 android:textColor="@color/secondary_text_material_light"
                 android:textSize="16sp" />
 
@@ -59,7 +59,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
                 android:fontFamily="sans-serif-medium"
-                android:text="Top expenses:"
+                android:text="Największe wydatki:"
                 android:textColor="@color/secondary_text_material_light"
                 android:textSize="16sp" />
 
@@ -126,7 +126,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
             android:fontFamily="sans-serif-medium"
-            android:text="Top expenses:"
+            android:text="Największe wydatki:"
             android:textColor="@color/secondary_text_material_light"
             android:textSize="16sp" />
 

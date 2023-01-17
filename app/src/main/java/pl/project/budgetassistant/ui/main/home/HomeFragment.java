@@ -43,7 +43,7 @@ public class HomeFragment extends BaseFragment {
     private User user;
     private ListDataSet<Expense> expenseListDataSet;
 
-    public static final CharSequence TITLE = "Home";
+    public static final CharSequence TITLE = "Strona główna";
     private Gauge gauge;
     private TopCategoriesAdapter adapter;
     private ArrayList<TopCategoryListViewModel> categoryModelsHome;
