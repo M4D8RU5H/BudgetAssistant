@@ -16,6 +16,7 @@ import android.widget.TimePicker;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ import pl.project.budgetassistant.firebase.FirebaseElement;
 import pl.project.budgetassistant.firebase.FirebaseObserver;
 import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.firebase.models.User;
+import pl.project.budgetassistant.models.DefaultCategories;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.util.CurrencyHelper;
@@ -112,7 +114,7 @@ public class AddExpenseActivity extends CircularRevealActivity {
     private void dateUpdated() {
         if (user == null) return;
 
-        final List<Category> categories = CategoriesHelper.getCategories();
+        final List<Category> categories = Arrays.asList(DefaultCategories.getInstance().getDefaultCategories());
         ExpenseCategoriesAdapter categoryAdapter = new ExpenseCategoriesAdapter(this,
                 R.layout.new_entry_type_spinner_row, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

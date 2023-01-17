@@ -18,6 +18,7 @@ public class CurrencyHelper {
                 (absMoney % 100)  +
                 (currency.leftSide ? "" : ((currency.hasSpace ? " " : "") + currency.symbol));
     }
+
     public static void setupAmountEditText(EditText editText, User user) {
         editText.setText(CurrencyHelper.formatCurrency(user.currency,0), TextView.BufferType.EDITABLE);
         editText.addTextChangedListener(new TextWatcher() {
@@ -46,6 +47,7 @@ public class CurrencyHelper {
             }
         });
     }
+
     public static long convertAmountStringToLong(CharSequence s) {
         String cleanString = s.toString().replaceAll("[^0-9]", "");
         return Long.valueOf(cleanString);

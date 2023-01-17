@@ -15,12 +15,12 @@ public class CalendarHelper {
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
         cal.set(Calendar.DAY_OF_MONTH, user.userSettings.dayOfMonthStart + 1);
+
         if (new Date().getTime() < cal.getTime().getTime())
             cal.add(Calendar.MONTH, -1);
 
         return cal;
     }
-
 
     public static Calendar getUserPeriodEndDate(User user) {
         Calendar cal = getUserPeriodStartDate(user);
