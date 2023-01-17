@@ -19,7 +19,8 @@ public class ExpenseBaseViewModel extends ViewModel {
     public ExpenseBaseViewModel(String uid, String expenseId) {
         this.uid=uid;
         liveData = new FirebaseQueryLiveDataElement<>(Expense.class, FirebaseDatabase.getInstance().getReference()
-                .child("expenses").child(uid).child(expenseId));    }
+                .child("expenses").child(uid).child(expenseId));
+    }
 
     public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<Expense>> observer) {
         if(liveData.getValue() != null) observer.onChanged(liveData.getValue());
@@ -34,6 +35,4 @@ public class ExpenseBaseViewModel extends ViewModel {
     public void removeObserver(Observer<FirebaseElement<Expense>> observer) {
         liveData.removeObserver(observer);
     }
-
-
 }
