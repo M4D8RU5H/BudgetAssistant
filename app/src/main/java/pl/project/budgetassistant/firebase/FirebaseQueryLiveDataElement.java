@@ -12,7 +12,6 @@ public class FirebaseQueryLiveDataElement<T> extends LiveData<FirebaseElement<T>
     private Query query;
     private ValueEventListener listener;
 
-
     public FirebaseQueryLiveDataElement(Class<T> genericTypeClass, Query query) {
         setValue(null);
         listener = new ValueEventListener() {
@@ -46,10 +45,8 @@ public class FirebaseQueryLiveDataElement<T> extends LiveData<FirebaseElement<T>
         setListener();
     }
 
-
     @Override
     protected void onInactive() {
         removeListener();
     }
-
 }

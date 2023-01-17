@@ -21,12 +21,12 @@ public class UserProfileBaseViewModel extends ViewModel {
     }
 
     public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<User>> observer) {
-        if(liveData.getValue() != null) observer.onChanged(liveData.getValue());
+        if (liveData.getValue() != null) { observer.onChanged(liveData.getValue()); }
+
         liveData.observe(owner, new Observer<FirebaseElement<User>>() {
             @Override
             public void onChanged(@Nullable FirebaseElement<User> firebaseElement) {
                 if(firebaseElement != null) observer.onChanged(firebaseElement);
-
             }
         });
     }

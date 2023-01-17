@@ -4,7 +4,7 @@ import android.graphics.Color;
 
 import pl.project.budgetassistant.R;
 
-public  class DefaultCategories {
+public class DefaultCategories {
     private static Category[] categories = new Category[]{
             new Category(":others", "Others", R.drawable.category_default, Color.parseColor("#455a64")),
             new Category(":clothing", "Clothing", R.drawable.category_clothing, Color.parseColor("#d32f2f")),
@@ -22,7 +22,6 @@ public  class DefaultCategories {
             new Category(":transfer", "Transfer", R.drawable.category_transfer, Color.parseColor("#fbc02d")),
             new Category(":transport", "Transport", R.drawable.category_transport, Color.parseColor("#ffa000")),
             new Category(":work", "Work", R.drawable.category_briefcase, Color.parseColor("#f57c00")),
-
 
     };
 

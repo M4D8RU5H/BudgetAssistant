@@ -45,10 +45,11 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
         this.fragmentActivity = fragmentActivity;
         this.uid = uid;
 
-        UserProfileViewModelFactory.getModel(uid,fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
             public void onChanged(FirebaseElement<User> element) {
-                if(!element.hasNoError()) return;
+                if(!element.hasNoError()) { return; }
+
                 ExpensesRecyclerViewAdapter.this.user = element.getElement();
                 if(!firstUserSync) {
                     ExpensesHistoryViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
@@ -57,11 +58,11 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
                             if(element.hasNoError()) {
                                 expenses = element.getElement();
                                 element.getElement().notifyRecycler(ExpensesRecyclerViewAdapter.this);
-
                             }
                         }
                     });
                 }
+
                 notifyDataSetChanged();
                 firstUserSync = true;
             }
@@ -80,7 +81,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
     public void onBindViewHolder(ExpenseHolder holder, int position) {
         String id = expenses.getIDList().get(position);
         Expense expense = expenses.getList().get(position);
-        Category category = CategoriesHelper.searchCategory(expense.categoryID);
+        Category category = CategoriesHelper.searchCategory(expense.categoryId);
         holder.iconImageView.setImageResource(category.getIconResourceID());
         holder.iconImageView.setBackgroundTintList(ColorStateList.valueOf(category.getIconColor()));
         holder.categoryTextView.setText(category.getCategoryVisibleName(fragmentActivity));

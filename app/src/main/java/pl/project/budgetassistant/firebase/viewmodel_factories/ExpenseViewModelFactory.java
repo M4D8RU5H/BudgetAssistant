@@ -14,8 +14,8 @@ public class ExpenseViewModelFactory implements ViewModelProvider.Factory {
     private ExpenseViewModelFactory(String uid, String entryId) {
         this.uid = uid;
         this.entryId = entryId;
-
     }
+
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         return (T) new ExpenseBaseViewModel(uid, entryId);
@@ -24,6 +24,4 @@ public class ExpenseViewModelFactory implements ViewModelProvider.Factory {
     public static ExpenseBaseViewModel getModel(String uid, String entryId, FragmentActivity activity) {
         return ViewModelProviders.of(activity, new ExpenseViewModelFactory(uid, entryId)).get(ExpenseBaseViewModel.class);
     }
-
-
 }

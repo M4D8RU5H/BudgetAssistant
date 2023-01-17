@@ -65,7 +65,7 @@ public class AddExpenseActivity extends CircularRevealActivity {
         selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
         chosenDate = Calendar.getInstance();
 
-        UserProfileViewModelFactory.getModel(getUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -140,10 +140,10 @@ public class AddExpenseActivity extends CircularRevealActivity {
             throw new EmptyStringException("Entry name length should be > 0");
         }
 
-        FirebaseDatabase.getInstance().getReference().child("expenses").child(getUid())
+        FirebaseDatabase.getInstance().getReference().child("expenses").child(getCurrentUserUid())
                 .push().setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
         user.budget.analyzer.spentAmount += amount;
-        UserProfileViewModelFactory.saveModel(getUid(), user);
+        UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
         finishWithAnimation();
     }
 

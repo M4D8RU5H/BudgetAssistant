@@ -18,9 +18,8 @@ public class TopExpensesStatisticsViewModelFactory implements ViewModelProvider.
 
     TopExpensesStatisticsViewModelFactory(String uid) {
         this.uid = uid;
-
-
     }
+
     public void setDate(Calendar startDate, Calendar endDate){
         this.startDate=startDate;
         this.endDate=endDate;

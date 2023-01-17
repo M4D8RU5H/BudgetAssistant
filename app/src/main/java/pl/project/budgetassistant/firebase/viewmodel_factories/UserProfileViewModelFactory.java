@@ -15,7 +15,6 @@ public class UserProfileViewModelFactory implements ViewModelProvider.Factory {
 
     private UserProfileViewModelFactory(String uid) {
         this.uid = uid;
-
     }
 
     public static void saveModel(String uid, User user) {
@@ -31,6 +30,4 @@ public class UserProfileViewModelFactory implements ViewModelProvider.Factory {
     public static UserProfileBaseViewModel getModel(String uid, FragmentActivity activity) {
         return ViewModelProviders.of(activity, new UserProfileViewModelFactory(uid)).get(UserProfileBaseViewModel.class);
     }
-
-
 }

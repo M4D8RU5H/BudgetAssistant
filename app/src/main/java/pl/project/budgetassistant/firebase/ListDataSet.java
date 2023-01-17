@@ -45,6 +45,7 @@ public class ListDataSet<T> {
         this.index=index;
         lastOperation = Operation.ITEM_REMOVED;
     }
+
     public void notifyRecycler (RecyclerView.Adapter recyclerViewAdapter) {
         switch (lastOperation) {
             case ITEM_CHANGED:
@@ -78,5 +79,4 @@ public class ListDataSet<T> {
     public ArrayList<String> getIDList() {
         return ids;
     }
-
 }

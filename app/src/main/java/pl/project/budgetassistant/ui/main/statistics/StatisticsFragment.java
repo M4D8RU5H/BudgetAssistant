@@ -95,7 +95,7 @@ public class StatisticsFragment extends BaseFragment {
         adapter = new TopCategoriesStatisticsAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        TopExpensesStatisticsViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
+        TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
 
             @Override
             public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
@@ -108,7 +108,7 @@ public class StatisticsFragment extends BaseFragment {
         });
 
 
-        UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -142,7 +142,7 @@ public class StatisticsFragment extends BaseFragment {
                     continue;
                 }
                 expensesSumInDateRange += expense.amount;
-                Category category = CategoriesHelper.searchCategory(expense.categoryID);
+                Category category = CategoriesHelper.searchCategory(expense.categoryId);
                 if (categoryModels.get(category) != null)
                     categoryModels.put(category, categoryModels.get(category) + expense.amount);
                 else
@@ -276,7 +276,7 @@ public class StatisticsFragment extends BaseFragment {
 
 
     private void calendarUpdated() {
-        TopExpensesStatisticsViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
+        TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
 
     }
 

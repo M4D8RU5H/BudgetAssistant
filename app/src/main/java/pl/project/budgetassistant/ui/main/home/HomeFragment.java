@@ -71,8 +71,6 @@ public class HomeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
-
-
     }
 
     @Override
@@ -96,8 +94,7 @@ public class HomeFragment extends BaseFragment {
         favoriteListView.setAdapter(adapter);
 
 
-        TopExpensesViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
-
+        TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
             @Override
             public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -108,7 +105,7 @@ public class HomeFragment extends BaseFragment {
         });
 
 
-        UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -117,12 +114,10 @@ public class HomeFragment extends BaseFragment {
 
                     Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
                     Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
-                    TopExpensesViewModelFactory.getModel(getUid(), getActivity()).setDateFilter(startDate, endDate);
+                    TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity()).setDateFilter(startDate, endDate);
                 }
             }
         });
-
-
     }
 
     @Override
@@ -163,12 +158,11 @@ public class HomeFragment extends BaseFragment {
                 continue;
             }
             expensesSumInDateRange += expense.amount;
-            Category category = CategoriesHelper.searchCategory(expense.categoryID);
+            Category category = CategoriesHelper.searchCategory(expense.categoryId);
             if (categoryModels.get(category) != null)
                 categoryModels.put(category, categoryModels.get(category) + expense.amount);
             else
                 categoryModels.put(category, expense.amount);
-
         }
 
         categoryModelsHome.clear();

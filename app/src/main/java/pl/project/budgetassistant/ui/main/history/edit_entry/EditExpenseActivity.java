@@ -127,7 +127,7 @@ public class EditExpenseActivity extends BaseActivity {
 
 
 
-        UserProfileViewModelFactory.getModel(getUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
             @Override
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -138,7 +138,7 @@ public class EditExpenseActivity extends BaseActivity {
         });
 
 
-        ExpenseViewModelFactory.getModel(getUid(), expenseId, this).observe(this, new FirebaseObserver<FirebaseElement<Expense>>() {
+        ExpenseViewModelFactory.getModel(getCurrentUserUid(), expenseId, this).observe(this, new FirebaseObserver<FirebaseElement<Expense>>() {
             @Override
             public void onChanged(FirebaseElement<Expense> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -169,7 +169,7 @@ public class EditExpenseActivity extends BaseActivity {
             @Override
             public void run() {
                 ExpenseCategoriesAdapter adapter = (ExpenseCategoriesAdapter) selectCategorySpinner.getAdapter();
-                selectCategorySpinner.setSelection(adapter.getItemIndex(expense.categoryID));
+                selectCategorySpinner.setSelection(adapter.getItemIndex(expense.categoryId));
             }
         });
 
@@ -201,18 +201,18 @@ public class EditExpenseActivity extends BaseActivity {
 
         long finalBalanceDifference = amount - expense.amount;
         user.budget.analyzer.spentAmount += finalBalanceDifference;
-        UserProfileViewModelFactory.saveModel(getUid(), user);
+        UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
 
-        FirebaseDatabase.getInstance().getReference().child("expenses").child(getUid())
+        FirebaseDatabase.getInstance().getReference().child("expenses").child(getCurrentUserUid())
                 .child(expenseId).setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
         finish();
     }
 
     public void removeExpense() {
         user.budget.analyzer.spentAmount -= expense.amount;
-        UserProfileViewModelFactory.saveModel(getUid(), user);
+        UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
 
-        FirebaseDatabase.getInstance().getReference().child("expenses").child(getUid())
+        FirebaseDatabase.getInstance().getReference().child("expenses").child(getCurrentUserUid())
                 .child(expenseId).removeValue();
         finish();
     }

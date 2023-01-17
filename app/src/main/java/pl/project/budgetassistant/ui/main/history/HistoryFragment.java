@@ -60,7 +60,7 @@ public class HistoryFragment extends BaseFragment {
         dividerTextView.setText("Last 100 elements:");
         historyRecyclerView = view.findViewById(R.id.history_recycler_view);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        historyRecyclerViewAdapter = new ExpensesRecyclerViewAdapter(getActivity(), getUid());
+        historyRecyclerViewAdapter = new ExpensesRecyclerViewAdapter(getActivity(), getCurrentUserUid());
         historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
 
         historyRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -98,7 +98,7 @@ public class HistoryFragment extends BaseFragment {
     private void updateCalendarIcon() {
         MenuItem calendarIcon = menu.findItem(R.id.action_date_range);
         if (calendarIcon == null) return;
-        ExpensesHistoryViewModelFactory.Model model = ExpensesHistoryViewModelFactory.getModel(getUid(), getActivity());
+        ExpensesHistoryViewModelFactory.Model model = ExpensesHistoryViewModelFactory.getModel(getCurrentUserUid(), getActivity());
         if (model.hasDateSet()) {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar_active));
 
