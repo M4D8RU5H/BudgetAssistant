@@ -173,9 +173,9 @@ public class HomeFragment extends BaseFragment {
         });
 
         adapter.notifyDataSetChanged();
-        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend + user.budget.analyzer.spentAmount)); //TODO Dostosować do wzorca
+        totalBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend + user.budget.spentAmount)); //TODO Dostosować do wzorca
 
-        gaugeLeftBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.analyzer.spentAmount));
+        gaugeLeftBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.spentAmount));
         gaugeLeftLine1TextView.setText(dateFormat.format(startDate.getTime()));
         gaugeRightBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend));
         gaugeRightLine1TextView.setText(dateFormat.format(endDate.getTime()));

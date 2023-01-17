@@ -126,7 +126,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
                     public void onClick(DialogInterface dialog, int whichButton) {
                         FirebaseDatabase.getInstance().getReference()
                                 .child("expenses").child(uid).child(id).removeValue();
-                        user.budget.analyzer.spentAmount-= balanceDifference;
+                        user.budget.spentAmount -= balanceDifference;
                         UserProfileViewModelFactory.saveModel(uid, user);
                         dialog.dismiss();
                     }

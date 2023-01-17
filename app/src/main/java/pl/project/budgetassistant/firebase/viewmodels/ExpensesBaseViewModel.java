@@ -35,6 +35,4 @@ public class ExpensesBaseViewModel extends ViewModel {
     public void removeObserver(Observer<FirebaseElement<ListDataSet<Expense>>> observer) {
         liveData.removeObserver(observer);
     }
-
-
 }
