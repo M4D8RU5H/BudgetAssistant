@@ -9,7 +9,6 @@ import pl.project.budgetassistant.firebase.models.UserSettings;
 public class CalendarHelper {
     public static Calendar getUserPeriodStartDate(User user) {
         Calendar cal = Calendar.getInstance();
-        cal.setFirstDayOfWeek(getUserFirstDayOfWeek(user));
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
@@ -32,25 +31,5 @@ public class CalendarHelper {
         cal.add(Calendar.DATE, -1);
 
         return cal;
-    }
-
-    private static int getUserFirstDayOfWeek(User user) {
-        switch (user.userSettings.dayOfWeekStart) {
-            case 0:
-                return Calendar.MONDAY;
-            case 1:
-                return Calendar.TUESDAY;
-            case 2:
-                return Calendar.WEDNESDAY;
-            case 3:
-                return Calendar.THURSDAY;
-            case 4:
-                return Calendar.FRIDAY;
-            case 5:
-                return Calendar.SATURDAY;
-            case 6:
-                return Calendar.SUNDAY;
-        }
-        return 0;
     }
 }

@@ -114,34 +114,6 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             }
         });
 
-
-        Preference firstWeekDayPreference = findPreference(getString(R.string.pref_key_first_week_day));
-        firstWeekDayPreference.setSummary(getDayString(user.userSettings.dayOfWeekStart));
-        firstWeekDayPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Set first week day:");
-                View layout = getLayoutInflater().inflate(R.layout.set_first_day_of_week_dialog, null);
-                RadioGroup radioGroup = layout.findViewById(R.id.radio_group);
-                ((RadioButton) radioGroup.getChildAt(user.userSettings.dayOfWeekStart)).setChecked(true);
-                alert.setView(layout);
-                alert.setNegativeButton("Cancel", null);
-                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int index = radioGroup.indexOfChild(layout.findViewById(radioGroup.getCheckedRadioButtonId()));
-                        user.userSettings.dayOfWeekStart = index;
-                        saveUser(user);
-                    }
-                });
-                alert.create().show();
-                return true;
-            }
-        });
-
-
         Preference firstMonthDayPreference = findPreference(getString(R.string.pref_key_first_month_day));
         firstMonthDayPreference.setSummary("" + (user.userSettings.dayOfMonthStart + 1));
         firstMonthDayPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

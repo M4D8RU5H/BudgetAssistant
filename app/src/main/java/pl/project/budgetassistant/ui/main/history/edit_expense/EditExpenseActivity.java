@@ -122,10 +122,8 @@ public class EditExpenseActivity extends BaseActivity {
                         removeExpense();
                     }
                 }).setNegativeButton("No", null).show();
-
             }
         });
-
 
 
         UserProfileViewModelFactory.getModel(getCurrentUserUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
@@ -148,8 +146,6 @@ public class EditExpenseActivity extends BaseActivity {
                 }
             }
         });
-
-
     }
 
     public void dataUpdated() {
