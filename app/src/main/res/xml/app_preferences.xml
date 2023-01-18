@@ -2,22 +2,22 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:divider="?attr/dividerHorizontal">
     <PreferenceCategory
-        android:title="General">
+        android:title="Opcje">
         <Preference
             android:key="@string/pref_key_current_month_budget"
-            android:summary="120$"
-            android:title="Limit" />
+            android:summary="69zł"
+            android:title="Budżet" />
         <Preference
             android:key="@string/pref_key_currency"
-            android:summary="$"
-            android:title="Currency" />
+            android:summary="zł"
+            android:title="Waluta" />
         <Preference
             android:key="@string/pref_key_first_month_day"
-            android:summary="Monday"
-            android:title="Set first month day" />
+            android:summary="1"
+            android:title="Pierwszy dzień miesiąca" />
         <Preference
             android:key="@string/pref_key_logout"
-            android:title="Logout" />
+            android:title="Wyloguj" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -242,7 +242,7 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:text="Add"
+                android:text="Dodaj"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
