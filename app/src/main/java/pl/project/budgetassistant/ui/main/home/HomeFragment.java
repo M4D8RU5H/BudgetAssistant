@@ -55,7 +55,6 @@ public class HomeFragment extends BaseFragment {
     private TextView gaugeRightLine1TextView;
 
     public static HomeFragment newInstance() {
-
         return new HomeFragment();
     }
 

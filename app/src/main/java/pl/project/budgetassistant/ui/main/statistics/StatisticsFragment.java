@@ -47,7 +47,6 @@ import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.ui.options.OptionsActivity;
 import pl.project.budgetassistant.util.CurrencyHelper;
 
-
 public class StatisticsFragment extends BaseFragment {
     public static final CharSequence TITLE = "Statystyki";
 
@@ -98,7 +97,6 @@ public class StatisticsFragment extends BaseFragment {
                     dataUpdated();
                 }
             }
-
         });
 
 

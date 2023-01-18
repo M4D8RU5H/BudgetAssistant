@@ -36,10 +36,8 @@ public class HistoryFragment extends BaseFragment {
     private TextView dividerTextView;
 
     public static HistoryFragment newInstance() {
-
         return new HistoryFragment();
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

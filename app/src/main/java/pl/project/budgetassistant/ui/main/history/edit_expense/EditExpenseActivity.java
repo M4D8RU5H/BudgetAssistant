@@ -33,24 +33,25 @@ import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.firebase.viewmodel_factories.ExpenseViewModelFactory;
 import pl.project.budgetassistant.models.DefaultCategories;
 import pl.project.budgetassistant.models.Category;
+import pl.project.budgetassistant.ui.BaseExpenseActivity;
 import pl.project.budgetassistant.ui.add_expense.ExpenseCategoriesAdapter;
 import pl.project.budgetassistant.util.CurrencyHelper;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.firebase.models.Expense;
 
-public class EditExpenseActivity extends BaseActivity {
+public class EditExpenseActivity extends BaseExpenseActivity {
 
-    private Spinner selectCategorySpinner;
+    //private Spinner selectCategorySpinner;
     private TextInputEditText selectNameEditText;
-    private Calendar choosedDate;
+    //private Calendar chosenDate;
     private TextInputEditText selectAmountEditText;
-    private TextView chooseDayTextView;
-    private TextView chooseTimeTextView;
+    //private TextView chooseDayTextView;
+    //private TextView chooseTimeTextView;
     private Spinner selectTypeSpinner;
-    private User user;
+    //private User user;
     private Expense expense;
-    private Button removeEntryButton;
-    private Button editEntryButton;
+    //private Button removeEntryButton;
+    //private Button editEntryButton;
     private String expenseId;
     private TextInputLayout selectAmountInputLayout;
     private TextInputLayout selectNameInputLayout;
@@ -74,8 +75,9 @@ public class EditExpenseActivity extends BaseActivity {
         chooseDayTextView = findViewById(R.id.choose_day_textview);
         selectAmountEditText = findViewById(R.id.select_amount_edittext);
         selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
+        chosenDate = Calendar.getInstance();
 
-        choosedDate = Calendar.getInstance();
+
 
         updateDate();
         chooseDayTextView.setOnClickListener(new View.OnClickListener() {
@@ -96,8 +98,8 @@ public class EditExpenseActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    editExpense(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
-                            choosedDate.getTime(),
+                    modifyExpense(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
+                            chosenDate.getTime(),
                             ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
                             selectNameEditText.getText().toString());
                 }  catch (EmptyStringException e) {
@@ -131,7 +133,7 @@ public class EditExpenseActivity extends BaseActivity {
             public void onChanged(FirebaseElement<User> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
                     user = firebaseElement.getElement();
-                    dataUpdated();
+                    dateUpdated();
                 }
             }
         });
@@ -142,13 +144,13 @@ public class EditExpenseActivity extends BaseActivity {
             public void onChanged(FirebaseElement<Expense> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
                     expense = firebaseElement.getElement();
-                    dataUpdated();
+                    dateUpdated();
                 }
             }
         });
     }
 
-    public void dataUpdated() {
+    protected void dateUpdated() {
         if (expense == null || user == null) return;
 
         final List<Category> categories = Arrays.asList(DefaultCategories.getInstance().getDefaultCategories());
@@ -158,7 +160,7 @@ public class EditExpenseActivity extends BaseActivity {
         selectCategorySpinner.setAdapter(categoryAdapter);
 
         CurrencyHelper.setupAmountEditText(selectAmountEditText, user);
-        choosedDate.setTimeInMillis(-expense.timestamp);
+        chosenDate.setTimeInMillis(-expense.timestamp);
         updateDate();
         selectNameEditText.setText(expense.name);
 
@@ -170,7 +172,6 @@ public class EditExpenseActivity extends BaseActivity {
             }
         });
 
-
         long amount = Math.abs(expense.amount);
         String current = CurrencyHelper.formatCurrency(user.currency, amount);
         selectAmountEditText.setText(current);
@@ -179,15 +180,9 @@ public class EditExpenseActivity extends BaseActivity {
 
     }
 
-    private void updateDate() {
-        SimpleDateFormat dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        chooseDayTextView.setText(dataFormatter.format(choosedDate.getTime()));
 
-        SimpleDateFormat dataFormatter2 = new SimpleDateFormat("HH:mm");
-        chooseTimeTextView.setText(dataFormatter2.format(choosedDate.getTime()));
-    }
+    protected void modifyExpense(long amount, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException {
 
-    public void editExpense(long amount, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException {
         if (amount == 0) {
             throw new ZeroBalanceDifferenceException("Różnica środków nie powinna wynosić 0");
         }
@@ -195,6 +190,12 @@ public class EditExpenseActivity extends BaseActivity {
         if (entryName == null || entryName.length() == 0) {
             throw new EmptyStringException("Nazwa nie może być pusta");
         }
+
+        final List<Category> categories = Arrays.asList(DefaultCategories.getInstance().getDefaultCategories());
+        ExpenseCategoriesAdapter categoryAdapter = new ExpenseCategoriesAdapter(this,
+                R.layout.new_entry_type_spinner_row, categories);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectCategorySpinner.setAdapter(categoryAdapter);
 
         long finalBalanceDifference = amount - expense.amount;
         user.budget.spentAmount += finalBalanceDifference;
@@ -213,41 +214,4 @@ public class EditExpenseActivity extends BaseActivity {
                 .child(expenseId).removeValue();
         finish();
     }
-
-
-    private void pickTime() {
-        new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                choosedDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                choosedDate.set(Calendar.MINUTE, minute);
-                updateDate();
-
-            }
-        }, choosedDate.get(Calendar.HOUR_OF_DAY), choosedDate.get(Calendar.MINUTE), true).show();
-    }
-
-    private void pickDate() {
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
-        new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        choosedDate.set(year, monthOfYear, dayOfMonth);
-                        updateDate();
-
-                    }
-                }, year, month, day).show();
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
-        onBackPressed();
-        return true;
-    }
-
 }

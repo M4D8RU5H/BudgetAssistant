@@ -30,21 +30,22 @@ import pl.project.budgetassistant.firebase.FirebaseObserver;
 import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.models.DefaultCategories;
+import pl.project.budgetassistant.ui.BaseExpenseActivity;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.util.CurrencyHelper;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.firebase.models.Expense;
 
-public class AddExpenseActivity extends BaseActivity {
+public class AddExpenseActivity extends BaseExpenseActivity {
 
-    private Spinner selectCategorySpinner;
+    //private Spinner selectCategorySpinner;
     private TextInputEditText selectNameEditText;
-    private Calendar chosenDate;
+    //private Calendar chosenDate;
     private TextInputEditText selectAmountEditText;
-    private TextView chooseDayTextView;
-    private TextView chooseTimeTextView;
-    private User user;
+   // private TextView chooseDayTextView;
+    //private TextView chooseTimeTextView;
+    //private User user;
     private TextInputLayout selectAmountInputLayout;
     private TextInputLayout selectNameInputLayout;
 
@@ -66,6 +67,7 @@ public class AddExpenseActivity extends BaseActivity {
         selectAmountEditText = findViewById(R.id.select_amount_edittext);
         selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
         chosenDate = Calendar.getInstance();
+
 
         UserProfileViewModelFactory.getModel(getCurrentUserUid(), this) //Z fabryki UserProfileBaseViewModel dostaję instancję tej klasy dla obencego użytkownika i dla bieżącej aktywności
                 .observe(this, new FirebaseObserver<FirebaseElement<User>>() { //nakazuje obserwowanie obiektowi klasy UserProfileBaseViewModel nowo stworzonego obiektu FirebaseObserver
@@ -97,7 +99,7 @@ public class AddExpenseActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    addExpense(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
+                    modifyExpense(-CurrencyHelper.convertAmountStringToLong(selectAmountEditText.getText().toString()),
                             chosenDate.getTime(),
                             ((Category) selectCategorySpinner.getSelectedItem()).getCategoryID(),
                             selectNameEditText.getText().toString());
@@ -110,8 +112,9 @@ public class AddExpenseActivity extends BaseActivity {
         });
     }
 
-    private void dateUpdated() {
+    protected void dateUpdated() {
         if (user == null) return;
+
 
         final List<Category> categories = Arrays.asList(DefaultCategories.getInstance().getDefaultCategories());
         ExpenseCategoriesAdapter categoryAdapter = new ExpenseCategoriesAdapter(this,
@@ -122,16 +125,7 @@ public class AddExpenseActivity extends BaseActivity {
         CurrencyHelper.setupAmountEditText(selectAmountEditText, user);
     }
 
-
-    private void updateDate() {
-        SimpleDateFormat dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        chooseDayTextView.setText(dataFormatter.format(chosenDate.getTime()));
-
-        SimpleDateFormat dataFormatter2 = new SimpleDateFormat("HH:mm");
-        chooseTimeTextView.setText(dataFormatter2.format(chosenDate.getTime()));
-    }
-
-    public void addExpense(long amount, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
+    protected void modifyExpense(long amount, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
         if (amount == 0) {
             throw new ZeroBalanceDifferenceException("Różnica środków nie powinna wynosić 0");
         }
@@ -140,47 +134,12 @@ public class AddExpenseActivity extends BaseActivity {
             throw new EmptyStringException("Nazwa wpisu nie może być pusta");
         }
 
+
+
         FirebaseDatabase.getInstance().getReference().child("expenses").child(getCurrentUserUid())
                 .push().setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
         user.budget.spentAmount += amount;
         UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
         finish();
     }
-
-    private void pickTime() {
-        new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                chosenDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                chosenDate.set(Calendar.MINUTE, minute);
-                updateDate();
-
-            }
-        }, chosenDate.get(Calendar.HOUR_OF_DAY), chosenDate.get(Calendar.MINUTE), true).show();
-    }
-
-    private void pickDate() {
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
-        new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        chosenDate.set(year, monthOfYear, dayOfMonth);
-                        updateDate();
-
-                    }
-                }, year, month, day).show();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        onBackPressed();
-        return true;
-    }
-
-
 }
