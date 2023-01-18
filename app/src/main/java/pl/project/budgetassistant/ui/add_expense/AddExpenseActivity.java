@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import pl.project.budgetassistant.activities.CircularRevealActivity;
+import pl.project.budgetassistant.base.BaseActivity;
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
 import pl.project.budgetassistant.firebase.FirebaseElement;
@@ -35,7 +36,7 @@ import pl.project.budgetassistant.util.CurrencyHelper;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.firebase.models.Expense;
 
-public class AddExpenseActivity extends CircularRevealActivity {
+public class AddExpenseActivity extends BaseActivity {
 
     private Spinner selectCategorySpinner;
     private TextInputEditText selectNameEditText;
@@ -47,12 +48,11 @@ public class AddExpenseActivity extends CircularRevealActivity {
     private TextInputLayout selectAmountInputLayout;
     private TextInputLayout selectNameInputLayout;
 
-    public AddExpenseActivity() {
-        super(R.layout.activity_add_epense, R.id.activity_contact_fab, R.id.root_layout, R.id.root_layout2);
-    }
 
     @Override
-    public void onInitialized(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_epense);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Dodaj wydatek");
@@ -144,7 +144,7 @@ public class AddExpenseActivity extends CircularRevealActivity {
                 .push().setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
         user.budget.spentAmount += amount;
         UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
-        finishWithAnimation();
+        finish();
     }
 
     private void pickTime() {
