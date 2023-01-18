@@ -49,7 +49,7 @@ import pl.project.budgetassistant.util.CurrencyHelper;
 
 
 public class StatisticsFragment extends BaseFragment {
-    public static final CharSequence TITLE = "Statistics";
+    public static final CharSequence TITLE = "Statystyki";
 
     private Menu menu;
     private Calendar calendarStart;
@@ -91,7 +91,6 @@ public class StatisticsFragment extends BaseFragment {
         favoriteListView.setAdapter(adapter);
 
         TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
-
             @Override
             public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
                 if (firebaseElement.hasNoError()) {
@@ -125,12 +124,12 @@ public class StatisticsFragment extends BaseFragment {
 
     private void dataUpdated() {
         if (calendarStart != null && calendarEnd != null && expenseListDataSet != null) {
-            List<Expense> entryList = new ArrayList<>(expenseListDataSet.getList());
+            List<Expense> expenses = new ArrayList<>(expenseListDataSet.getList());
 
             long expensesSumInDateRange = 0;
 
             HashMap<Category, Long> categoryModels = new HashMap<>();
-            for (Expense expense : entryList) {
+            for (Expense expense : expenses) {
                 expensesSumInDateRange += expense.amount;
                 Category category = CategoriesHelper.searchCategory(expense.categoryId);
                 if (categoryModels.get(category) != null)
@@ -200,7 +199,6 @@ public class StatisticsFragment extends BaseFragment {
 
             expensesTextView.setText(CurrencyHelper.formatCurrency(user.currency, expensesSumInDateRange));
         }
-
     }
 
     @Override
@@ -220,7 +218,6 @@ public class StatisticsFragment extends BaseFragment {
         } else {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar));
         }
-
     }
 
 
@@ -259,11 +256,7 @@ public class StatisticsFragment extends BaseFragment {
         datePicker.show(getActivity().getFragmentManager(), "TAG");
     }
 
-
     private void calendarUpdated() {
         TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
-
     }
-
-
 }
