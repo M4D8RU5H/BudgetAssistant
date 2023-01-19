@@ -112,11 +112,9 @@ public class StatisticsFragment extends BaseFragment {
                     updateCalendarIcon(false);
                     calendarUpdated();
                     dataUpdated();
-
                 }
             }
         });
-
     }
 
 

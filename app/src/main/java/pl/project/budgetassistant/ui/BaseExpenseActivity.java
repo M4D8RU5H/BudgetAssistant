@@ -19,11 +19,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.base.BaseActivity;
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
+import pl.project.budgetassistant.firebase.FirebaseElement;
+import pl.project.budgetassistant.firebase.FirebaseObserver;
 import pl.project.budgetassistant.firebase.models.User;
 import pl.project.budgetassistant.firebase.models.Expense;
+import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
+import pl.project.budgetassistant.models.Category;
+import pl.project.budgetassistant.util.CurrencyHelper;
 
 
 public abstract class BaseExpenseActivity extends BaseActivity {
@@ -35,12 +41,51 @@ public abstract class BaseExpenseActivity extends BaseActivity {
     protected TextView chooseTimeTextView;
     protected User user;
     protected Expense expense;
-    protected Button removeEntryButton;
-    protected Button editEntryButton;
-    protected String expenseId;
     protected TextInputLayout selectAmountInputLayout;
     protected TextInputLayout selectNameInputLayout;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        configureUI();
+
+        selectCategorySpinner = findViewById(R.id.select_category_spinner);
+        selectNameEditText = findViewById(R.id.select_name_edittext);
+        selectNameInputLayout = findViewById(R.id.select_name_inputlayout);
+        chooseTimeTextView = findViewById(R.id.choose_time_textview);
+        chooseDayTextView = findViewById(R.id.choose_day_textview);
+        selectAmountEditText = findViewById(R.id.select_amount_edittext);
+        selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
+        chosenDate = Calendar.getInstance();
+
+        updateDate();
+
+        chooseDayTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickDate();
+            }
+        });
+
+        chooseTimeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickTime();
+            }
+        });
+
+        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+            @Override
+            public void onChanged(FirebaseElement<User> firebaseElement) {
+                if (firebaseElement.hasNoError()) {
+                    user = firebaseElement.getElement();
+                    dateUpdated();
+                }
+            }
+        });
+    }
+
+    abstract protected void configureUI();
     abstract protected void dateUpdated();
     abstract protected void modifyExpense(long amount, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException;
 

@@ -40,59 +40,20 @@ import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.firebase.models.Expense;
 
 public class EditExpenseActivity extends BaseExpenseActivity {
-
-    //private Spinner selectCategorySpinner;
-    private TextInputEditText selectNameEditText;
-    //private Calendar chosenDate;
-    private TextInputEditText selectAmountEditText;
-    //private TextView chooseDayTextView;
-    //private TextView chooseTimeTextView;
-    private Spinner selectTypeSpinner;
-    //private User user;
     private Expense expense;
-    //private Button removeEntryButton;
-    //private Button editEntryButton;
     private String expenseId;
-    private TextInputLayout selectAmountInputLayout;
-    private TextInputLayout selectNameInputLayout;
+    private Button editEntryButton;
+    private Button removeEntryButton;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void configureUI() {
         setContentView(R.layout.activity_edit_expense);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Edytuj wydatek");
 
-        expenseId = getIntent().getExtras().getString("expense-id");
-
-        selectCategorySpinner = findViewById(R.id.select_category_spinner);
-        selectNameEditText = findViewById(R.id.select_name_edittext);
-        selectNameInputLayout = findViewById(R.id.select_name_inputlayout);
         editEntryButton = findViewById(R.id.edit_entry_button);
         removeEntryButton = findViewById(R.id.remove_entry_button);
-        chooseTimeTextView = findViewById(R.id.choose_time_textview);
-        chooseDayTextView = findViewById(R.id.choose_day_textview);
-        selectAmountEditText = findViewById(R.id.select_amount_edittext);
-        selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
-        chosenDate = Calendar.getInstance();
-
-
-
-        updateDate();
-        chooseDayTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickDate();
-            }
-        });
-        chooseTimeTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickTime();
-            }
-        });
-
 
         editEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,17 +88,7 @@ public class EditExpenseActivity extends BaseExpenseActivity {
             }
         });
 
-
-        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
-            @Override
-            public void onChanged(FirebaseElement<User> firebaseElement) {
-                if (firebaseElement.hasNoError()) {
-                    user = firebaseElement.getElement();
-                    dateUpdated();
-                }
-            }
-        });
-
+        expenseId = getIntent().getExtras().getString("expense-id");
 
         ExpenseViewModelFactory.getModel(getCurrentUserUid(), expenseId, this).observe(this, new FirebaseObserver<FirebaseElement<Expense>>() {
             @Override
@@ -191,22 +142,18 @@ public class EditExpenseActivity extends BaseExpenseActivity {
             throw new EmptyStringException("Nazwa nie może być pusta");
         }
 
-        final List<Category> categories = Arrays.asList(DefaultCategories.getInstance().getDefaultCategories());
-        ExpenseCategoriesAdapter categoryAdapter = new ExpenseCategoriesAdapter(this,
-                R.layout.new_entry_type_spinner_row, categories);
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectCategorySpinner.setAdapter(categoryAdapter);
-
         long finalBalanceDifference = amount - expense.amount;
-        user.budget.spentAmount += finalBalanceDifference;
-        UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
 
         FirebaseDatabase.getInstance().getReference().child("expenses").child(getCurrentUserUid())
                 .child(expenseId).setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
+
+        user.budget.spentAmount += finalBalanceDifference;
+        UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
+
         finish();
     }
 
-    public void removeExpense() {
+    private void removeExpense() {
         user.budget.spentAmount -= expense.amount;
         UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
 

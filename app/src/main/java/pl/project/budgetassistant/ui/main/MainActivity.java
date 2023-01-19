@@ -30,14 +30,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
 
 
-        FloatingActionButton addEntryButton = findViewById(R.id.add_expense_fab);
-        addEntryButton.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addExpenseButton = findViewById(R.id.add_expense_fab);
+        addExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityOptions options =
-                        ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, addEntryButton, addEntryButton.getTransitionName());
-                startActivity(new Intent(MainActivity.this, AddExpenseActivity.class), options.toBundle());
-
+                startActivity(new Intent(MainActivity.this, AddExpenseActivity.class));
             }
         });
 
@@ -62,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tab);
         tabLayout.setupWithViewPager(viewPager);
-
-
     }
 
     @Override

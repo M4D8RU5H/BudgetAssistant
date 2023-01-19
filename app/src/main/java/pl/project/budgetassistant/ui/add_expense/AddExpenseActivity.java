@@ -38,62 +38,16 @@ import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.firebase.models.Expense;
 
 public class AddExpenseActivity extends BaseExpenseActivity {
-
-    //private Spinner selectCategorySpinner;
-    private TextInputEditText selectNameEditText;
-    //private Calendar chosenDate;
-    private TextInputEditText selectAmountEditText;
-   // private TextView chooseDayTextView;
-    //private TextView chooseTimeTextView;
-    //private User user;
-    private TextInputLayout selectAmountInputLayout;
-    private TextInputLayout selectNameInputLayout;
-
+    private Button addEntryButton;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void configureUI() {
         setContentView(R.layout.activity_add_epense);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Dodaj wydatek");
 
-        selectCategorySpinner = findViewById(R.id.select_category_spinner);
-        selectNameEditText = findViewById(R.id.select_name_edittext);
-        selectNameInputLayout = findViewById(R.id.select_name_inputlayout);
-        Button addEntryButton = findViewById(R.id.add_entry_button);
-        chooseTimeTextView = findViewById(R.id.choose_time_textview);
-        chooseDayTextView = findViewById(R.id.choose_day_textview);
-        selectAmountEditText = findViewById(R.id.select_amount_edittext);
-        selectAmountInputLayout = findViewById(R.id.select_amount_inputlayout);
-        chosenDate = Calendar.getInstance();
-
-
-        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this) //Z fabryki UserProfileBaseViewModel dostaję instancję tej klasy dla obencego użytkownika i dla bieżącej aktywności
-                .observe(this, new FirebaseObserver<FirebaseElement<User>>() { //nakazuje obserwowanie obiektowi klasy UserProfileBaseViewModel nowo stworzonego obiektu FirebaseObserver
-            @Override
-            public void onChanged(FirebaseElement<User> firebaseElement) {
-                if (firebaseElement.hasNoError()) {
-                    user = firebaseElement.getElement();
-                    dateUpdated();
-                }
-            }
-        });
-
-        updateDate();
-        chooseDayTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickDate();
-            }
-        });
-
-        chooseTimeTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickTime();
-            }
-        });
+        addEntryButton = findViewById(R.id.add_entry_button);
 
         addEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +69,6 @@ public class AddExpenseActivity extends BaseExpenseActivity {
     protected void dateUpdated() {
         if (user == null) return;
 
-
         final List<Category> categories = Arrays.asList(DefaultCategories.getInstance().getDefaultCategories());
         ExpenseCategoriesAdapter categoryAdapter = new ExpenseCategoriesAdapter(this,
                 R.layout.new_entry_type_spinner_row, categories);
@@ -134,12 +87,12 @@ public class AddExpenseActivity extends BaseExpenseActivity {
             throw new EmptyStringException("Nazwa wpisu nie może być pusta");
         }
 
-
-
         FirebaseDatabase.getInstance().getReference().child("expenses").child(getCurrentUserUid())
                 .push().setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
+
         user.budget.spentAmount += amount;
         UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
+
         finish();
     }
 }
