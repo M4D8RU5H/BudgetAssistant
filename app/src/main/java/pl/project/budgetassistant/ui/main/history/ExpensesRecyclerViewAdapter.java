@@ -20,13 +20,13 @@ import java.util.Calendar;
 import java.util.Date;
 
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.firebase.FirebaseElement;
-import pl.project.budgetassistant.firebase.FirebaseObserver;
-import pl.project.budgetassistant.firebase.ListDataSet;
-import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
-import pl.project.budgetassistant.firebase.viewmodel_factories.ExpensesHistoryViewModelFactory;
-import pl.project.budgetassistant.firebase.models.User;
-import pl.project.budgetassistant.firebase.models.Expense;
+import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
+import pl.project.budgetassistant.persistence.firebase.ListDataSet;
+import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
+import pl.project.budgetassistant.persistence.viewmodel_factories.ExpensesHistoryViewModelFactory;
+import pl.project.budgetassistant.models.User;
+import pl.project.budgetassistant.models.Expense;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.ui.main.history.edit_expense.EditExpenseActivity;
@@ -52,7 +52,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
 
                 ExpensesRecyclerViewAdapter.this.user = element.getElement();
                 if(!firstUserSync) {
-                    ExpensesHistoryViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
+                    ExpensesHistoryViewModelFactory.getModel(uid, fragmentActivity, null).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
                         @Override
                         public void onChanged(FirebaseElement<ListDataSet<Expense>> element) {
                             if(element.hasNoError()) {
@@ -145,7 +145,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
     }
 
     public void setDateRange(Calendar calendarStart, Calendar calendarEnd) {
-        ExpensesHistoryViewModelFactory.getModel(uid, fragmentActivity).setDateFilter(calendarStart, calendarEnd);
+        ExpensesHistoryViewModelFactory.getModel(uid, fragmentActivity, null).setDateFilter(calendarStart, calendarEnd);
     }
 
 

@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -34,13 +33,13 @@ import java.util.Map;
 
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.base.BaseFragment;
-import pl.project.budgetassistant.firebase.FirebaseElement;
-import pl.project.budgetassistant.firebase.FirebaseObserver;
-import pl.project.budgetassistant.firebase.ListDataSet;
-import pl.project.budgetassistant.firebase.models.User;
-import pl.project.budgetassistant.firebase.models.Expense;
-import pl.project.budgetassistant.firebase.viewmodel_factories.TopExpensesStatisticsViewModelFactory;
-import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
+import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
+import pl.project.budgetassistant.persistence.firebase.ListDataSet;
+import pl.project.budgetassistant.models.User;
+import pl.project.budgetassistant.models.Expense;
+import pl.project.budgetassistant.persistence.viewmodel_factories.TopExpensesStatisticsViewModelFactory;
+import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.util.CalendarHelper;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;

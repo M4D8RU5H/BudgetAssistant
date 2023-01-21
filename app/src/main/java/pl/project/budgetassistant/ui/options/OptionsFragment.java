@@ -10,8 +10,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -21,10 +19,10 @@ import java.util.ArrayList;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.exceptions.NumberRangeException;
 import pl.project.budgetassistant.ui.signin.SignInActivity;
-import pl.project.budgetassistant.firebase.FirebaseElement;
-import pl.project.budgetassistant.firebase.FirebaseObserver;
-import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
-import pl.project.budgetassistant.firebase.models.User;
+import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
+import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
+import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.util.CurrencyHelper;
 
 public class OptionsFragment extends PreferenceFragmentCompat {

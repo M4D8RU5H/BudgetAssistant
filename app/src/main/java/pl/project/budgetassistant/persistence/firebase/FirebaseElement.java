@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.firebase;
+package pl.project.budgetassistant.persistence.firebase;
 
 import com.google.firebase.database.DatabaseError;
 

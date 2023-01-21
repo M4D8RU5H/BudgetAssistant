@@ -1,6 +1,6 @@
 package pl.project.budgetassistant.ui.main.statistics;
 
-import pl.project.budgetassistant.firebase.models.Currency;
+import pl.project.budgetassistant.models.Currency;
 import pl.project.budgetassistant.models.Category;
 
 public class TopCategoryStatisticsListViewModel {

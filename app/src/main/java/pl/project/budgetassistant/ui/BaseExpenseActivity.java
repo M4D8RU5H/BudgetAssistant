@@ -2,34 +2,28 @@ package pl.project.budgetassistant.ui;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.base.BaseActivity;
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
-import pl.project.budgetassistant.firebase.FirebaseElement;
-import pl.project.budgetassistant.firebase.FirebaseObserver;
-import pl.project.budgetassistant.firebase.models.User;
-import pl.project.budgetassistant.firebase.models.Expense;
-import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
-import pl.project.budgetassistant.models.Category;
-import pl.project.budgetassistant.util.CurrencyHelper;
+import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
+import pl.project.budgetassistant.models.User;
+import pl.project.budgetassistant.models.Expense;
+import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 
 
 public abstract class BaseExpenseActivity extends BaseActivity {

@@ -5,8 +5,8 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import pl.project.budgetassistant.firebase.models.Currency;
-import pl.project.budgetassistant.firebase.models.User;
+import pl.project.budgetassistant.models.Currency;
+import pl.project.budgetassistant.models.User;
 
 public class CurrencyHelper {
     public static String formatCurrency(Currency currency, long money) {

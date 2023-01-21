@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.firebase.viewmodels;
+package pl.project.budgetassistant.persistence.viewmodels;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -7,10 +7,10 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.database.FirebaseDatabase;
 
-import pl.project.budgetassistant.firebase.FirebaseElement;
-import pl.project.budgetassistant.firebase.FirebaseObserver;
-import pl.project.budgetassistant.firebase.FirebaseQueryLiveDataElement;
-import pl.project.budgetassistant.firebase.models.User;
+import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
+import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataElement;
+import pl.project.budgetassistant.models.User;
 
 public class UserProfileBaseViewModel extends ViewModel {
     private final FirebaseQueryLiveDataElement<User> liveData;

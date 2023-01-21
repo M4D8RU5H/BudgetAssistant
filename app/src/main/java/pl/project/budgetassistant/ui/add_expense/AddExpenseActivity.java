@@ -1,41 +1,23 @@
 package pl.project.budgetassistant.ui.add_expense;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.os.Bundle;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import pl.project.budgetassistant.activities.CircularRevealActivity;
-import pl.project.budgetassistant.base.BaseActivity;
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
-import pl.project.budgetassistant.firebase.FirebaseElement;
-import pl.project.budgetassistant.firebase.FirebaseObserver;
-import pl.project.budgetassistant.firebase.viewmodel_factories.UserProfileViewModelFactory;
-import pl.project.budgetassistant.firebase.models.User;
+import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.models.DefaultCategories;
 import pl.project.budgetassistant.ui.BaseExpenseActivity;
-import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.util.CurrencyHelper;
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.firebase.models.Expense;
+import pl.project.budgetassistant.models.Expense;
 
 public class AddExpenseActivity extends BaseExpenseActivity {
     private Button addEntryButton;

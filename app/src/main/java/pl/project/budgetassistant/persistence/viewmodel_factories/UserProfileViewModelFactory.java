@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.firebase.viewmodel_factories;
+package pl.project.budgetassistant.persistence.viewmodel_factories;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -7,8 +7,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.firebase.database.FirebaseDatabase;
 
-import pl.project.budgetassistant.firebase.models.User;
-import pl.project.budgetassistant.firebase.viewmodels.UserProfileBaseViewModel;
+import pl.project.budgetassistant.models.User;
+import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 
 public class UserProfileViewModelFactory implements ViewModelProvider.Factory {
     private String uid;

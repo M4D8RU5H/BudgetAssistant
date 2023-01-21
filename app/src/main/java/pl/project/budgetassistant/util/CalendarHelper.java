@@ -3,8 +3,7 @@ package pl.project.budgetassistant.util;
 import java.util.Calendar;
 import java.util.Date;
 
-import pl.project.budgetassistant.firebase.models.User;
-import pl.project.budgetassistant.firebase.models.UserSettings;
+import pl.project.budgetassistant.models.User;
 
 public class CalendarHelper {
     public static Calendar getUserPeriodStartDate(User user) {

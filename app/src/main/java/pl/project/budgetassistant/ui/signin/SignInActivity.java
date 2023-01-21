@@ -30,7 +30,7 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.firebase.models.User;
+import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.ui.main.MainActivity;
 
 

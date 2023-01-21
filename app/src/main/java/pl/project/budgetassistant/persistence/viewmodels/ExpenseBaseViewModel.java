@@ -1,4 +1,6 @@
-package pl.project.budgetassistant.firebase.viewmodels;
+package pl.project.budgetassistant.persistence.viewmodels;
+
+import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -7,12 +9,14 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.database.FirebaseDatabase;
 
-import pl.project.budgetassistant.firebase.FirebaseElement;
-import pl.project.budgetassistant.firebase.FirebaseObserver;
-import pl.project.budgetassistant.firebase.FirebaseQueryLiveDataElement;
-import pl.project.budgetassistant.firebase.models.Expense;
+import java.util.Observable;
 
-public class ExpenseBaseViewModel extends ViewModel {
+import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
+import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataElement;
+import pl.project.budgetassistant.models.Expense;
+
+public class ExpenseBaseViewModel extends ViewModel implements Observer {
     protected final FirebaseQueryLiveDataElement<Expense> liveData;
     protected final String uid;
 
@@ -34,5 +38,10 @@ public class ExpenseBaseViewModel extends ViewModel {
 
     public void removeObserver(Observer<FirebaseElement<Expense>> observer) {
         liveData.removeObserver(observer);
+    }
+
+    @Override
+    public void onChanged(Object o) {
+        Log.d("Nadzieja", "Niech to się uda");
     }
 }

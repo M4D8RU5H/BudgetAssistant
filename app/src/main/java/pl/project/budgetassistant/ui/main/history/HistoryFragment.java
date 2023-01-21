@@ -20,9 +20,11 @@ import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Observer;
 
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.firebase.viewmodel_factories.ExpensesHistoryViewModelFactory;
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.viewmodel_factories.ExpensesHistoryViewModelFactory;
 import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.ui.options.OptionsActivity;
 
@@ -96,7 +98,7 @@ public class HistoryFragment extends BaseFragment {
     private void updateCalendarIcon() {
         MenuItem calendarIcon = menu.findItem(R.id.action_date_range);
         if (calendarIcon == null) return;
-        ExpensesHistoryViewModelFactory.Model model = ExpensesHistoryViewModelFactory.getModel(getCurrentUserUid(), getActivity());
+        ExpensesHistoryViewModelFactory.Model model = ExpensesHistoryViewModelFactory.getModel(getCurrentUserUid(), getActivity(), null);
         if (model.hasDateSet()) {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar_active));
 

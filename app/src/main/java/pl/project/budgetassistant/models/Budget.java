@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.firebase.models;
+package pl.project.budgetassistant.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 

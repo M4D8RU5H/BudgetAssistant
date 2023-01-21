@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.firebase.viewmodel_factories;
+package pl.project.budgetassistant.persistence.viewmodel_factories;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -9,7 +9,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
-import pl.project.budgetassistant.firebase.viewmodels.ExpensesBaseViewModel;
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.viewmodels.ExpensesBaseViewModel;
 
 public class TopExpensesStatisticsViewModelFactory implements ViewModelProvider.Factory {
     private Calendar endDate;
@@ -38,7 +39,7 @@ public class TopExpensesStatisticsViewModelFactory implements ViewModelProvider.
 
         public Model(String uid) {
             super(uid, FirebaseDatabase.getInstance().getReference()
-                    .child("expenses").child(uid).orderByChild("timestamp"));
+                    .child("expenses").child(uid).orderByChild("timestamp"), null);
         }
 
         public void setDateFilter(Calendar startDate, Calendar endDate) {
