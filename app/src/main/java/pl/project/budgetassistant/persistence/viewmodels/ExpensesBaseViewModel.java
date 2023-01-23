@@ -1,7 +1,5 @@
 package pl.project.budgetassistant.persistence.viewmodels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -11,17 +9,19 @@ import com.google.firebase.database.Query;
 
 import java.util.Observable;
 
-import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataSet;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
 import pl.project.budgetassistant.models.Expense;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 
 public class ExpensesBaseViewModel extends ViewModel implements java.util.Observer {
     protected final FirebaseQueryLiveDataSet<Expense> liveData;
     protected final String uid;
-    protected final ExpenseRepository expenseRepo;
+    protected ExpenseRepository expenseRepo;
+    protected UpdateCommand updateCommand;
 
     public ExpensesBaseViewModel(String uid, Query query, ExpenseRepository expenseRepo) {
         this.uid = uid;
@@ -34,23 +34,23 @@ public class ExpensesBaseViewModel extends ViewModel implements java.util.Observ
         liveData = new FirebaseQueryLiveDataSet<>(Expense.class, query);
     }
 
-    public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<ListDataSet<Expense>>> observer) {
+    public void observe(LifecycleOwner owner, FirebaseObserver<QueryResult<ListDataSet<Expense>>> observer) {
         observer.onChanged(liveData.getValue());
-        liveData.observe(owner, new Observer<FirebaseElement<ListDataSet<Expense>>>() {
+        liveData.observe(owner, new Observer<QueryResult<ListDataSet<Expense>>>() {
             @Override
-            public void onChanged(@Nullable FirebaseElement<ListDataSet<Expense>> element) {
+            public void onChanged(@Nullable QueryResult<ListDataSet<Expense>> element) {
                 if(element != null) observer.onChanged(element);
             }
         });
     }
 
-    public void removeObserver(Observer<FirebaseElement<ListDataSet<Expense>>> observer) {
-        liveData.removeObserver(observer);
+    public void setUpdateCommand(UpdateCommand updateCommand) {
+        this.updateCommand = updateCommand;
+        updateCommand.execute();
     }
-
 
     @Override
     public void update(Observable o, Object arg) {
-        Log.d("fdsf", "fdsf");
+        updateCommand.execute();
     }
 }

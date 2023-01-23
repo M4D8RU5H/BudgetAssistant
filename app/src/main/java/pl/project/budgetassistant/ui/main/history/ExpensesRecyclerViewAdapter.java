@@ -20,9 +20,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.ExpensesHistoryViewModelFactory;
 import pl.project.budgetassistant.models.User;
@@ -34,32 +35,32 @@ import pl.project.budgetassistant.util.CurrencyHelper;
 
 public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHolder> {
 
-    private final String uid;
+    private final String currentUserUid;
     private final FragmentActivity fragmentActivity;
     private ListDataSet<Expense> expenses;
 
     private User user;
     private boolean firstUserSync = false;
+    private ExpenseRepository expenseRepo;
+    private ExpensesHistoryViewModelFactory.Model expensesHistoryViewModel;
 
-    public ExpensesRecyclerViewAdapter(FragmentActivity fragmentActivity, String uid) {
+    public ExpensesRecyclerViewAdapter(FragmentActivity fragmentActivity, String currentUserUid, ExpenseRepository expenseRepo) {
         this.fragmentActivity = fragmentActivity;
-        this.uid = uid;
+        this.currentUserUid = currentUserUid;
+        this.expenseRepo = expenseRepo;
 
-        UserProfileViewModelFactory.getModel(uid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<User>>() {
+        expensesHistoryViewModel = ExpensesHistoryViewModelFactory.getModel(currentUserUid, fragmentActivity, expenseRepo);
+
+        UserProfileViewModelFactory.getModel(currentUserUid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<QueryResult<User>>() {
             @Override
-            public void onChanged(FirebaseElement<User> element) {
+            public void onChanged(QueryResult<User> element) {
                 if(!element.hasNoError()) { return; }
 
-                ExpensesRecyclerViewAdapter.this.user = element.getElement();
+                ExpensesRecyclerViewAdapter.this.user = element.getResult();
                 if(!firstUserSync) {
-                    ExpensesHistoryViewModelFactory.getModel(uid, fragmentActivity, null).observe(fragmentActivity, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
-                        @Override
-                        public void onChanged(FirebaseElement<ListDataSet<Expense>> element) {
-                            if(element.hasNoError()) {
-                                expenses = element.getElement();
-                                element.getElement().notifyRecycler(ExpensesRecyclerViewAdapter.this);
-                            }
-                        }
+                    expensesHistoryViewModel.setUpdateCommand(() -> {
+                        expenses = expenseRepo.getFirst(500);
+                        expenses.notifyRecycler(ExpensesRecyclerViewAdapter.this);
                     });
                 }
 
@@ -67,7 +68,6 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
                 firstUserSync = true;
             }
         });
-
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
         holder.view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                createDeleteDialog(id, uid, expense.amount, fragmentActivity);
+                createDeleteDialog(id, currentUserUid, expense.amount, fragmentActivity);
                 return false;
             }
         });
@@ -141,12 +141,14 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
                     }
                 })
                 .create().show();
-
     }
 
-    public void setDateRange(Calendar calendarStart, Calendar calendarEnd) {
-        ExpensesHistoryViewModelFactory.getModel(uid, fragmentActivity, null).setDateFilter(calendarStart, calendarEnd);
+    public void setDateRange(Calendar startDate, Calendar endDate) {
+        expensesHistoryViewModel.setUpdateCommand(() -> {
+            expenses = expenseRepo.getFromDateRange(startDate, endDate);
+            expenses.notifyRecycler(ExpensesRecyclerViewAdapter.this);
+        });
+
+        expensesHistoryViewModel.setDateRange(startDate, endDate);
     }
-
-
 }

@@ -20,7 +20,6 @@ import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Observer;
 
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
@@ -36,6 +35,7 @@ public class HistoryFragment extends BaseFragment {
     private ExpensesRecyclerViewAdapter historyRecyclerViewAdapter;
     private Menu menu;
     private TextView dividerTextView;
+    private ExpenseRepository expenseRepo;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -56,11 +56,12 @@ public class HistoryFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        expenseRepo = new ExpenseRepository(getActivity(), getCurrentUserUid());
         dividerTextView = view.findViewById(R.id.divider_textview);
         dividerTextView.setText("OStatnie 100 elementów:");
         historyRecyclerView = view.findViewById(R.id.history_recycler_view);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        historyRecyclerViewAdapter = new ExpensesRecyclerViewAdapter(getActivity(), getCurrentUserUid());
+        historyRecyclerViewAdapter = new ExpensesRecyclerViewAdapter(getActivity(), getCurrentUserUid(), expenseRepo);
         historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
 
         historyRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

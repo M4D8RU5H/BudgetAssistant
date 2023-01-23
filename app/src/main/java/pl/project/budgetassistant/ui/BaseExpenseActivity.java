@@ -19,7 +19,7 @@ import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.base.BaseActivity;
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
-import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.models.Expense;
@@ -68,11 +68,11 @@ public abstract class BaseExpenseActivity extends BaseActivity {
             }
         });
 
-        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this).observe(this, new FirebaseObserver<QueryResult<User>>() {
             @Override
-            public void onChanged(FirebaseElement<User> firebaseElement) {
-                if (firebaseElement.hasNoError()) {
-                    user = firebaseElement.getElement();
+            public void onChanged(QueryResult<User> queryResult) {
+                if (queryResult.hasNoError()) {
+                    user = queryResult.getResult();
                     dateUpdated();
                 }
             }

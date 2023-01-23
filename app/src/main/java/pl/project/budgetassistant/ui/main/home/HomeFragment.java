@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.util.CalendarHelper;
@@ -88,21 +88,21 @@ public class HomeFragment extends BaseFragment {
         adapter = new TopCategoriesAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
+        TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<ListDataSet<Expense>>>() {
             @Override
-            public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
-                if (firebaseElement.hasNoError()) {
-                    HomeFragment.this.expenseListDataSet = firebaseElement.getElement();
+            public void onChanged(QueryResult<ListDataSet<Expense>> queryResult) {
+                if (queryResult.hasNoError()) {
+                    HomeFragment.this.expenseListDataSet = queryResult.getResult();
                     dataUpdated();
                 }
             }
         });
 
-        UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<User>>() {
             @Override
-            public void onChanged(FirebaseElement<User> firebaseElement) {
-                if (firebaseElement.hasNoError()) {
-                    HomeFragment.this.user = firebaseElement.getElement();
+            public void onChanged(QueryResult<User> queryResult) {
+                if (queryResult.hasNoError()) {
+                    HomeFragment.this.user = queryResult.getResult();
                     dataUpdated();
 
                     Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);

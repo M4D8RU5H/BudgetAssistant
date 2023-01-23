@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.exceptions.NumberRangeException;
 import pl.project.budgetassistant.ui.signin.SignInActivity;
-import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.models.User;
@@ -49,12 +49,12 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             preference.setEnabled(false);
         }
 
-        UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<User>>() {
 
             @Override
-            public void onChanged(FirebaseElement<User> element) {
+            public void onChanged(QueryResult<User> element) {
                 if (!element.hasNoError()) return;
-                OptionsFragment.this.user = element.getElement();
+                OptionsFragment.this.user = element.getResult();
                 dataUpdated();
             }
         });

@@ -33,7 +33,7 @@ import java.util.Map;
 
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.base.BaseFragment;
-import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
 import pl.project.budgetassistant.models.User;
@@ -88,22 +88,22 @@ public class StatisticsFragment extends BaseFragment {
         adapter = new TopCategoriesStatisticsAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<ListDataSet<Expense>>>() {
+        TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<ListDataSet<Expense>>>() {
             @Override
-            public void onChanged(FirebaseElement<ListDataSet<Expense>> firebaseElement) {
-                if (firebaseElement.hasNoError()) {
-                    StatisticsFragment.this.expenseListDataSet = firebaseElement.getElement();
+            public void onChanged(QueryResult<ListDataSet<Expense>> queryResult) {
+                if (queryResult.hasNoError()) {
+                    StatisticsFragment.this.expenseListDataSet = queryResult.getResult();
                     dataUpdated();
                 }
             }
         });
 
 
-        UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<FirebaseElement<User>>() {
+        UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<User>>() {
             @Override
-            public void onChanged(FirebaseElement<User> firebaseElement) {
-                if (firebaseElement.hasNoError()) {
-                    StatisticsFragment.this.user = firebaseElement.getElement();
+            public void onChanged(QueryResult<User> queryResult) {
+                if (queryResult.hasNoError()) {
+                    StatisticsFragment.this.user = queryResult.getResult();
 
                     calendarStart = CalendarHelper.getUserPeriodStartDate(user);
                     calendarEnd = CalendarHelper.getUserPeriodEndDate(user);

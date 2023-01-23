@@ -1,9 +1,5 @@
 package pl.project.budgetassistant.persistence.viewmodel_factories;
 
-import android.util.Log;
-
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -13,7 +9,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.util.Calendar;
-import java.util.Observable;
 
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.viewmodels.ExpensesBaseViewModel;
@@ -50,16 +45,9 @@ public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factor
                     .child("expenses").child(uid).orderByChild("timestamp").limitToFirst(500);
         }
 
-        public void setDateFilter(Calendar startDate, Calendar endDate) {
+        public void setDateRange(Calendar startDate, Calendar endDate) {
             this.startDate = startDate;
             this.endDate = endDate;
-            if (startDate != null && endDate != null) {
-                liveData.setQuery(FirebaseDatabase.getInstance().getReference()
-                        .child("expenses").child(uid).orderByChild("timestamp")
-                        .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis()));
-            } else {
-                liveData.setQuery(getDefaultQuery(uid));
-            }
         }
 
         public boolean hasDateSet() {
@@ -72,11 +60,6 @@ public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factor
 
         public Calendar getEndDate() {
             return endDate;
-        }
-
-        @Override
-        public void update(Observable o, Object arg) {
-            Log.d("prosze", "prosze");
         }
     }
 }

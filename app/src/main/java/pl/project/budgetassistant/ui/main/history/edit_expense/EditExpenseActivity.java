@@ -15,7 +15,7 @@ import java.util.List;
 
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
-import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.ExpenseViewModelFactory;
@@ -78,11 +78,11 @@ public class EditExpenseActivity extends BaseExpenseActivity {
 
         expenseId = getIntent().getExtras().getString("expense-id");
 
-        ExpenseViewModelFactory.getModel(getCurrentUserUid(), expenseId, this).observe(this, new FirebaseObserver<FirebaseElement<Expense>>() {
+        ExpenseViewModelFactory.getModel(getCurrentUserUid(), expenseId, this).observe(this, new FirebaseObserver<QueryResult<Expense>>() {
             @Override
-            public void onChanged(FirebaseElement<Expense> firebaseElement) {
-                if (firebaseElement.hasNoError()) {
-                    expense = firebaseElement.getElement();
+            public void onChanged(QueryResult<Expense> queryResult) {
+                if (queryResult.hasNoError()) {
+                    expense = queryResult.getResult();
                     dateUpdated();
                 }
             }

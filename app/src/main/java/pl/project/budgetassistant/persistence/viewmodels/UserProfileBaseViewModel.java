@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.database.FirebaseDatabase;
 
-import pl.project.budgetassistant.persistence.firebase.FirebaseElement;
+import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataElement;
 import pl.project.budgetassistant.models.User;
@@ -20,13 +20,13 @@ public class UserProfileBaseViewModel extends ViewModel {
                 FirebaseDatabase.getInstance().getReference().child("users").child(uid));
     }
 
-    public void observe(LifecycleOwner owner, FirebaseObserver<FirebaseElement<User>> observer) {
+    public void observe(LifecycleOwner owner, FirebaseObserver<QueryResult<User>> observer) {
         if (liveData.getValue() != null) { observer.onChanged(liveData.getValue()); }
 
-        liveData.observe(owner, new Observer<FirebaseElement<User>>() {
+        liveData.observe(owner, new Observer<QueryResult<User>>() {
             @Override
-            public void onChanged(@Nullable FirebaseElement<User> firebaseElement) {
-                if(firebaseElement != null) observer.onChanged(firebaseElement);
+            public void onChanged(@Nullable QueryResult<User> queryResult) {
+                if(queryResult != null) observer.onChanged(queryResult);
             }
         });
     }
