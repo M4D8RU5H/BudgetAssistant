@@ -14,21 +14,21 @@ import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.viewmodels.ExpensesBaseViewModel;
 
 public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factory {
-    private String uid;
     private ExpenseRepository expenseRepo;
+    private String currentUserUid;
 
-    ExpensesHistoryViewModelFactory(String uid, ExpenseRepository expenseRepo) {
-        this.uid = uid;
+    ExpensesHistoryViewModelFactory(String currentUserUid, ExpenseRepository expenseRepo) {
+        this.currentUserUid = currentUserUid;
         this.expenseRepo = expenseRepo;
     }
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) new Model(uid, expenseRepo);
+        return (T) new Model(currentUserUid, expenseRepo);
     }
 
-    public static Model getModel(String uid, FragmentActivity activity, ExpenseRepository expenseRepo) {
-        return ViewModelProviders.of(activity, new ExpensesHistoryViewModelFactory(uid, expenseRepo)).get(Model.class);
+    public static Model getModel(String currentUserUid, FragmentActivity activity, ExpenseRepository expenseRepo) {
+        return ViewModelProviders.of(activity, new ExpensesHistoryViewModelFactory(currentUserUid, expenseRepo)).get(Model.class);
     }
 
     public static class Model extends ExpensesBaseViewModel {
@@ -36,8 +36,8 @@ public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factor
         private Calendar endDate;
         private Calendar startDate;
 
-        public Model(String uid, ExpenseRepository expenseRepo) {
-            super(uid, getDefaultQuery(uid), expenseRepo);
+        public Model(String currentUserUid, ExpenseRepository expenseRepo) {
+            super(currentUserUid, getDefaultQuery(currentUserUid), expenseRepo);
         }
 
         private static Query getDefaultQuery(String uid) {

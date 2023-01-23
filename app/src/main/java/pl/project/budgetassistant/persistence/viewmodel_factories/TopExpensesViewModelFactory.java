@@ -9,29 +9,32 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.viewmodels.ExpensesBaseViewModel;
 
 public class TopExpensesViewModelFactory implements ViewModelProvider.Factory {
-    private String uid;
+    private ExpenseRepository expenseRepo;
+    private String currentUserUid;
 
-    TopExpensesViewModelFactory(String uid) {
-        this.uid = uid;
+    TopExpensesViewModelFactory(String currentUserUid, ExpenseRepository expenseRepo) {
+        this.currentUserUid = currentUserUid;
+        this.expenseRepo = expenseRepo;
     }
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) new Model(uid);
+        return (T) new Model(currentUserUid, expenseRepo);
     }
 
-    public static Model getModel(String uid, FragmentActivity activity) {
-        return ViewModelProviders.of(activity, new TopExpensesViewModelFactory(uid)).get(Model.class);
+    public static Model getModel(String currentUserUid, FragmentActivity activity, ExpenseRepository expenseRepo) {
+        return ViewModelProviders.of(activity, new TopExpensesViewModelFactory(currentUserUid, expenseRepo)).get(Model.class);
     }
 
     public static class Model extends ExpensesBaseViewModel {
 
-        public Model(String uid) {
-            super(uid, FirebaseDatabase.getInstance().getReference()
-                    .child("expenses").child(uid).orderByChild("timestamp"), null);
+        public Model(String currentUserUid, ExpenseRepository expenseRepo) {
+            super(currentUserUid, FirebaseDatabase.getInstance().getReference()
+                    .child("expenses").child(currentUserUid).orderByChild("timestamp"), expenseRepo);
         }
 
         public void setDateFilter(Calendar startDate, Calendar endDate) {

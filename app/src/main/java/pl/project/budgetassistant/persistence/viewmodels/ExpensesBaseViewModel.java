@@ -51,6 +51,8 @@ public class ExpensesBaseViewModel extends ViewModel implements java.util.Observ
 
     @Override
     public void update(Observable o, Object arg) {
-        updateCommand.execute();
+        if (updateCommand != null) {
+            updateCommand.execute();
+        }
     }
 }

@@ -26,6 +26,7 @@ import java.util.Map;
 import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.base.BaseFragment;
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.util.CalendarHelper;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
@@ -53,6 +54,7 @@ public class HomeFragment extends BaseFragment {
     private TextView gaugeLeftLine2TextView;
     private TextView gaugeRightBalanceTextView;
     private TextView gaugeRightLine1TextView;
+    private ExpenseRepository expenseRepo;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -72,6 +74,8 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        expenseRepo = new ExpenseRepository(getActivity(), getCurrentUserUid());
+
         categoryModelsHome = new ArrayList<>();
 
         gauge = view.findViewById(R.id.gauge);
@@ -88,7 +92,7 @@ public class HomeFragment extends BaseFragment {
         adapter = new TopCategoriesAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<ListDataSet<Expense>>>() {
+        TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity(), expenseRepo).observe(this, new FirebaseObserver<QueryResult<ListDataSet<Expense>>>() {
             @Override
             public void onChanged(QueryResult<ListDataSet<Expense>> queryResult) {
                 if (queryResult.hasNoError()) {
@@ -107,7 +111,7 @@ public class HomeFragment extends BaseFragment {
 
                     Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
                     Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
-                    TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity()).setDateFilter(startDate, endDate);
+                    TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity(), expenseRepo).setDateFilter(startDate, endDate);
                 }
             }
         });

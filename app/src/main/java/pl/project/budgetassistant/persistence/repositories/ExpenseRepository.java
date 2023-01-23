@@ -36,6 +36,18 @@ public class ExpenseRepository extends Repository<Expense> {
         return null;
     }
 
+    public ListDataSet<Expense> GetAll() {
+        Query newQuery = FirebaseDatabase.getInstance().getReference()
+                .child("expenses").child(currentUserUid).orderByChild("timestamp");
+
+        if (!areQueriesTheSame(currentQuery, newQuery)) {
+            liveDataSet.setQuery(newQuery);
+            currentQuery = newQuery;
+        }
+
+        return (ListDataSet<Expense>) queryResult.getResult();
+    }
+
     public ListDataSet<Expense> getFirst(int count) {
         Query newQuery = FirebaseDatabase.getInstance().getReference()
                 .child("expenses").child(currentUserUid).orderByChild("timestamp").limitToFirst(count);
