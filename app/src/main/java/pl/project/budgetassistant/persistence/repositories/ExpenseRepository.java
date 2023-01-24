@@ -31,6 +31,13 @@ public class ExpenseRepository extends Repository<Expense> {
         });
     }
 
+    public void setLifecycleOwner(LifecycleOwner owner) {
+        liveDataSet.observe(owner, (Observer<? super QueryResult>) result -> { //Do metody observe przekazuje argument (obiekt pewnej klasy) do którego zostaną przypisane dane z bazy
+            queryResult = result;
+            notifyObservers();
+        });
+    }
+
     public Expense get(String uid) {
         //return (Expense) database.child(childNodeName).child(currentUserUid).child(uid);
         return null;

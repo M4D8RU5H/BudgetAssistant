@@ -27,6 +27,8 @@ import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
+import pl.project.budgetassistant.persistence.viewmodel_factories.ExpensesHistoryViewModelFactory;
 import pl.project.budgetassistant.util.CalendarHelper;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
@@ -42,7 +44,9 @@ import pl.project.budgetassistant.models.Expense;
 
 public class HomeFragment extends BaseFragment {
     private User user;
-    private ListDataSet<Expense> expenseListDataSet;
+    private ListDataSet<Expense> expenses;
+    private ExpenseRepository expenseRepo;
+    private TopExpensesViewModelFactory.Model topExpensesViewModel;
 
     public static final CharSequence TITLE = "Strona główna";
     private Gauge gauge;
@@ -51,10 +55,8 @@ public class HomeFragment extends BaseFragment {
     private TextView totalBalanceTextView;
     private TextView gaugeLeftBalanceTextView;
     private TextView gaugeLeftLine1TextView;
-    private TextView gaugeLeftLine2TextView;
     private TextView gaugeRightBalanceTextView;
     private TextView gaugeRightLine1TextView;
-    private ExpenseRepository expenseRepo;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -74,7 +76,8 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        expenseRepo = new ExpenseRepository(getActivity(), getCurrentUserUid());
+        topExpensesViewModel = TopExpensesViewModelFactory.getModel(getActivity(), new ExpenseRepository(getActivity(), getCurrentUserUid()));
+        expenseRepo = topExpensesViewModel.getExpenseRepository(getActivity());
 
         categoryModelsHome = new ArrayList<>();
 
@@ -84,23 +87,12 @@ public class HomeFragment extends BaseFragment {
         totalBalanceTextView = view.findViewById(R.id.total_balance_textview);
         gaugeLeftBalanceTextView = view.findViewById(R.id.gauge_left_balance_text_view);
         gaugeLeftLine1TextView = view.findViewById(R.id.gauge_left_line1_textview);
-        gaugeLeftLine2TextView = view.findViewById(R.id.gauge_left_line2_textview);
         gaugeRightBalanceTextView = view.findViewById(R.id.gauge_right_balance_text_view);
         gaugeRightLine1TextView = view.findViewById(R.id.gauge_right_line1_textview);
 
         ListView favoriteListView = view.findViewById(R.id.favourite_categories_list_view);
         adapter = new TopCategoriesAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
-
-        TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity(), expenseRepo).observe(this, new FirebaseObserver<QueryResult<ListDataSet<Expense>>>() {
-            @Override
-            public void onChanged(QueryResult<ListDataSet<Expense>> queryResult) {
-                if (queryResult.hasNoError()) {
-                    HomeFragment.this.expenseListDataSet = queryResult.getResult();
-                    dataUpdated();
-                }
-            }
-        });
 
         UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<User>>() {
             @Override
@@ -111,7 +103,11 @@ public class HomeFragment extends BaseFragment {
 
                     Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
                     Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
-                    TopExpensesViewModelFactory.getModel(getCurrentUserUid(), getActivity(), expenseRepo).setDateFilter(startDate, endDate);
+
+                    topExpensesViewModel.setUpdateCommand(() -> {
+                        expenses = expenseRepo.getFromDateRange(startDate, endDate);
+                        dataUpdated();
+                    });
                 }
             }
         });
@@ -135,9 +131,9 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void dataUpdated() {
-        if (user == null || expenseListDataSet == null) return;
+        if (user == null || expenses == null) return;
 
-        List<Expense> entryList = new ArrayList<>(expenseListDataSet.getList());
+        List<Expense> expenseList = new ArrayList<>(expenses.getList());
 
         Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
         Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
@@ -149,7 +145,7 @@ public class HomeFragment extends BaseFragment {
         long incomesSumInDateRange = 0;
 
         HashMap<Category, Long> categoryModels = new HashMap<>();
-        for (Expense expense : entryList) {
+        for (Expense expense : expenseList) {
             if (expense.amount > 0) {
                 incomesSumInDateRange += expense.amount;
                 continue;
@@ -183,9 +179,9 @@ public class HomeFragment extends BaseFragment {
         gaugeRightBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend));
         gaugeRightLine1TextView.setText(dateFormat.format(endDate.getTime()));
 
-        gauge.setPointStartColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
-        gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
-        gauge.setStrokeColor(ContextCompat.getColor(getContext(), R.color.gauge_gray));
+        //gauge.setPointStartColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
+        //gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
+        //gauge.setStrokeColor(ContextCompat.getColor(getContext(), R.color.gauge_gray));
 
         long limit = user.budget.amountToSpend;
         long expenses = -expensesSumInDateRange;

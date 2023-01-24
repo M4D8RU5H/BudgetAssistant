@@ -38,6 +38,8 @@ import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
 import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.models.Expense;
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 import pl.project.budgetassistant.persistence.viewmodel_factories.TopExpensesStatisticsViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.util.CalendarHelper;
@@ -48,12 +50,14 @@ import pl.project.budgetassistant.util.CurrencyHelper;
 
 public class StatisticsFragment extends BaseFragment {
     public static final CharSequence TITLE = "Statystyki";
+    private ExpenseRepository expenseRepo;
+    private TopExpensesStatisticsViewModelFactory.Model topExpensesStatisticsViewModel;
 
     private Menu menu;
-    private Calendar calendarStart;
-    private Calendar calendarEnd;
+    private Calendar startDate;
+    private Calendar endDate;
     private User user;
-    private ListDataSet<Expense> expenseListDataSet;
+    private ListDataSet<Expense> expenses;
     private PieChart pieChart;
     private ArrayList<TopCategoryStatisticsListViewModel> categoryModelsHome;
     private TopCategoriesStatisticsAdapter adapter;
@@ -78,6 +82,9 @@ public class StatisticsFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        expenseRepo = new ExpenseRepository(getActivity(), getCurrentUserUid());
+        topExpensesStatisticsViewModel = TopExpensesStatisticsViewModelFactory.getModel(getActivity(), expenseRepo);
+
         pieChart = view.findViewById(R.id.pie_chart);
         dividerTextView = view.findViewById(R.id.divider_textview);
         View incomesExpensesView = view.findViewById(R.id.incomes_expenses_view);
@@ -88,16 +95,21 @@ public class StatisticsFragment extends BaseFragment {
         adapter = new TopCategoriesStatisticsAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<ListDataSet<Expense>>>() {
-            @Override
-            public void onChanged(QueryResult<ListDataSet<Expense>> queryResult) {
-                if (queryResult.hasNoError()) {
-                    StatisticsFragment.this.expenseListDataSet = queryResult.getResult();
-                    dataUpdated();
-                }
-            }
-        });
+//        TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity(), null).observe(this, new FirebaseObserver<QueryResult<ListDataSet<Expense>>>() {
+//            @Override
+//            public void onChanged(QueryResult<ListDataSet<Expense>> queryResult) {
+//                if (queryResult.hasNoError()) {
+//                    StatisticsFragment.this.expenses = queryResult.getResult();
+//                    dataUpdated();
+//                }
+//            }
+//        });
 
+
+//        topExpensesStatisticsViewModel.setUpdateCommand(() -> {
+//            expenses = expenseRepo.getFirst(500);
+//            dataUpdated();
+//        });
 
         UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<User>>() {
             @Override
@@ -105,8 +117,8 @@ public class StatisticsFragment extends BaseFragment {
                 if (queryResult.hasNoError()) {
                     StatisticsFragment.this.user = queryResult.getResult();
 
-                    calendarStart = CalendarHelper.getUserPeriodStartDate(user);
-                    calendarEnd = CalendarHelper.getUserPeriodEndDate(user);
+                    startDate = CalendarHelper.getUserPeriodStartDate(user);
+                    endDate = CalendarHelper.getUserPeriodEndDate(user);
 
                     updateCalendarIcon(false);
                     calendarUpdated();
@@ -118,13 +130,13 @@ public class StatisticsFragment extends BaseFragment {
 
 
     private void dataUpdated() {
-        if (calendarStart != null && calendarEnd != null && expenseListDataSet != null) {
-            List<Expense> expenses = new ArrayList<>(expenseListDataSet.getList());
+        if (startDate != null && endDate != null && expenses != null) {
+            List<Expense> expenseList = new ArrayList<>(expenses.getList());
 
             long expensesSumInDateRange = 0;
 
             HashMap<Category, Long> categoryModels = new HashMap<>();
-            for (Expense expense : expenses) {
+            for (Expense expense : expenseList) {
                 expensesSumInDateRange += expense.amount;
                 Category category = CategoriesHelper.searchCategory(expense.categoryId);
                 if (categoryModels.get(category) != null)
@@ -189,8 +201,8 @@ public class StatisticsFragment extends BaseFragment {
 
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
 
-            dividerTextView.setText("Przedział czasowy: " + dateFormat.format(calendarStart.getTime())
-                    + "  -  " + dateFormat.format(calendarEnd.getTime()));
+            dividerTextView.setText("Przedział czasowy: " + dateFormat.format(startDate.getTime())
+                    + "  -  " + dateFormat.format(endDate.getTime()));
 
             expensesTextView.setText(CurrencyHelper.formatCurrency(user.currency, expensesSumInDateRange));
         }
@@ -233,17 +245,17 @@ public class StatisticsFragment extends BaseFragment {
         SmoothDateRangePickerFragment datePicker = SmoothDateRangePickerFragment.newInstance(new SmoothDateRangePickerFragment.OnDateRangeSetListener() {
             @Override
             public void onDateRangeSet(SmoothDateRangePickerFragment view, int yearStart, int monthStart, int dayStart, int yearEnd, int monthEnd, int dayEnd) {
-                calendarStart = Calendar.getInstance();
-                calendarStart.set(yearStart, monthStart, dayStart);
-                calendarStart.set(Calendar.HOUR_OF_DAY, 0);
-                calendarStart.set(Calendar.MINUTE, 0);
-                calendarStart.set(Calendar.SECOND, 0);
+                startDate = Calendar.getInstance();
+                startDate.set(yearStart, monthStart, dayStart);
+                startDate.set(Calendar.HOUR_OF_DAY, 0);
+                startDate.set(Calendar.MINUTE, 0);
+                startDate.set(Calendar.SECOND, 0);
 
-                calendarEnd = Calendar.getInstance();
-                calendarEnd.set(yearEnd, monthEnd, dayEnd);
-                calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
-                calendarEnd.set(Calendar.MINUTE, 59);
-                calendarEnd.set(Calendar.SECOND, 59);
+                endDate = Calendar.getInstance();
+                endDate.set(yearEnd, monthEnd, dayEnd);
+                endDate.set(Calendar.HOUR_OF_DAY, 23);
+                endDate.set(Calendar.MINUTE, 59);
+                endDate.set(Calendar.SECOND, 59);
                 calendarUpdated();
                 updateCalendarIcon(true);
             }
@@ -252,6 +264,9 @@ public class StatisticsFragment extends BaseFragment {
     }
 
     private void calendarUpdated() {
-        TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity()).setDateFilter(calendarStart, calendarEnd);
+        topExpensesStatisticsViewModel.setUpdateCommand(() -> {
+            expenses = expenseRepo.getFromDateRange(startDate, endDate);
+            dataUpdated();
+        });
     }
 }

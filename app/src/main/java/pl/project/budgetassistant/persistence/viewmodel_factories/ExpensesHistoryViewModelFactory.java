@@ -15,34 +15,26 @@ import pl.project.budgetassistant.persistence.viewmodels.ExpensesBaseViewModel;
 
 public class ExpensesHistoryViewModelFactory implements ViewModelProvider.Factory {
     private ExpenseRepository expenseRepo;
-    private String currentUserUid;
 
-    ExpensesHistoryViewModelFactory(String currentUserUid, ExpenseRepository expenseRepo) {
-        this.currentUserUid = currentUserUid;
+    ExpensesHistoryViewModelFactory(ExpenseRepository expenseRepo) {
         this.expenseRepo = expenseRepo;
     }
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) new Model(currentUserUid, expenseRepo);
+        return (T) new Model(expenseRepo);
     }
 
-    public static Model getModel(String currentUserUid, FragmentActivity activity, ExpenseRepository expenseRepo) {
-        return ViewModelProviders.of(activity, new ExpensesHistoryViewModelFactory(currentUserUid, expenseRepo)).get(Model.class);
+    public static Model getModel(FragmentActivity activity, ExpenseRepository expenseRepo) {
+        return ViewModelProviders.of(activity, new ExpensesHistoryViewModelFactory(expenseRepo)).get(Model.class);
     }
 
     public static class Model extends ExpensesBaseViewModel {
-
         private Calendar endDate;
         private Calendar startDate;
 
-        public Model(String currentUserUid, ExpenseRepository expenseRepo) {
-            super(currentUserUid, getDefaultQuery(currentUserUid), expenseRepo);
-        }
-
-        private static Query getDefaultQuery(String uid) {
-            return FirebaseDatabase.getInstance().getReference()
-                    .child("expenses").child(uid).orderByChild("timestamp").limitToFirst(500);
+        public Model(ExpenseRepository expenseRepo) {
+            super(expenseRepo);
         }
 
         public void setDateRange(Calendar startDate, Calendar endDate) {

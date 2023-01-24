@@ -18,35 +18,27 @@ import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 
 public class ExpensesBaseViewModel extends ViewModel implements java.util.Observer {
-    protected final FirebaseQueryLiveDataSet<Expense> liveData;
-    protected final String uid;
     protected ExpenseRepository expenseRepo;
     protected UpdateCommand updateCommand;
 
-    public ExpensesBaseViewModel(String uid, Query query, ExpenseRepository expenseRepo) {
-        this.uid = uid;
-        this.expenseRepo = expenseRepo;
-
-        if (expenseRepo != null) {
+    public ExpensesBaseViewModel(ExpenseRepository expenseRepo) {
+        if (expenseRepo != null && this.expenseRepo == null) {
+            this.expenseRepo = expenseRepo;
             expenseRepo.addObserver(this);
         }
-
-        liveData = new FirebaseQueryLiveDataSet<>(Expense.class, query);
-    }
-
-    public void observe(LifecycleOwner owner, FirebaseObserver<QueryResult<ListDataSet<Expense>>> observer) {
-        observer.onChanged(liveData.getValue());
-        liveData.observe(owner, new Observer<QueryResult<ListDataSet<Expense>>>() {
-            @Override
-            public void onChanged(@Nullable QueryResult<ListDataSet<Expense>> element) {
-                if(element != null) observer.onChanged(element);
-            }
-        });
     }
 
     public void setUpdateCommand(UpdateCommand updateCommand) {
         this.updateCommand = updateCommand;
         updateCommand.execute();
+    }
+
+    public ExpenseRepository getExpenseRepository(LifecycleOwner owner) {
+        if (expenseRepo != null) {
+            expenseRepo.setLifecycleOwner(owner);
+        }
+
+        return expenseRepo;
     }
 
     @Override

@@ -13,39 +13,24 @@ import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.viewmodels.ExpensesBaseViewModel;
 
 public class TopExpensesStatisticsViewModelFactory implements ViewModelProvider.Factory {
-    private Calendar endDate;
-    private Calendar startDate;
-    private String uid;
+    private ExpenseRepository expenseRepo;
 
-    TopExpensesStatisticsViewModelFactory(String uid) {
-        this.uid = uid;
-    }
-
-    public void setDate(Calendar startDate, Calendar endDate){
-        this.startDate=startDate;
-        this.endDate=endDate;
+    TopExpensesStatisticsViewModelFactory(ExpenseRepository expenseRepo) {
+        this.expenseRepo = expenseRepo;
     }
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) new Model(uid);
+        return (T) new Model(expenseRepo);
     }
 
-    public static Model getModel(String uid, FragmentActivity activity) {
-        return ViewModelProviders.of(activity, new TopExpensesStatisticsViewModelFactory(uid)).get(Model.class);
+    public static Model getModel(FragmentActivity activity, ExpenseRepository expenseRepo) {
+        return ViewModelProviders.of(activity, new TopExpensesStatisticsViewModelFactory(expenseRepo)).get(Model.class);
     }
 
     public static class Model extends ExpensesBaseViewModel {
-
-        public Model(String uid) {
-            super(uid, FirebaseDatabase.getInstance().getReference()
-                    .child("expenses").child(uid).orderByChild("timestamp"), null);
-        }
-
-        public void setDateFilter(Calendar startDate, Calendar endDate) {
-            liveData.setQuery(FirebaseDatabase.getInstance().getReference()
-                    .child("expenses").child(uid).orderByChild("timestamp")
-                    .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis()));
+        public Model(ExpenseRepository expenseRepo) {
+            super(expenseRepo);
         }
     }
 }

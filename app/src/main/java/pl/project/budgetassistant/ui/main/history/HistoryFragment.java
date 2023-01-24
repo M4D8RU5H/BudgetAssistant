@@ -36,6 +36,7 @@ public class HistoryFragment extends BaseFragment {
     private Menu menu;
     private TextView dividerTextView;
     private ExpenseRepository expenseRepo;
+    private ExpensesHistoryViewModelFactory.Model expenseHistoryViewModel;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -57,6 +58,8 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         expenseRepo = new ExpenseRepository(getActivity(), getCurrentUserUid());
+        expenseHistoryViewModel = ExpensesHistoryViewModelFactory.getModel(getActivity(), expenseRepo);
+
         dividerTextView = view.findViewById(R.id.divider_textview);
         dividerTextView.setText("OStatnie 100 elementów:");
         historyRecyclerView = view.findViewById(R.id.history_recycler_view);
@@ -99,20 +102,19 @@ public class HistoryFragment extends BaseFragment {
     private void updateCalendarIcon() {
         MenuItem calendarIcon = menu.findItem(R.id.action_date_range);
         if (calendarIcon == null) return;
-        ExpensesHistoryViewModelFactory.Model model = ExpensesHistoryViewModelFactory.getModel(getCurrentUserUid(), getActivity(), null);
-        if (model.hasDateSet()) {
+
+        if (expenseHistoryViewModel.hasDateSet()) {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar_active));
 
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
 
-            dividerTextView.setText("Przedział czasowy: " + dateFormat.format(model.getStartDate().getTime())
-                    + "  -  " + dateFormat.format(model.getEndDate().getTime()));
+            dividerTextView.setText("Przedział czasowy: " + dateFormat.format(expenseHistoryViewModel.getStartDate().getTime())
+                    + "  -  " + dateFormat.format(expenseHistoryViewModel.getEndDate().getTime()));
         } else {
             calendarIcon.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.icon_calendar));
 
             dividerTextView.setText("Ostatnie 100 elementów:");
         }
-
     }
 
     private void showSelectDateRangeDialog() {

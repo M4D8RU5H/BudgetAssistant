@@ -26,14 +26,12 @@ public class TopCategoriesAdapter extends ArrayAdapter<TopCategoryListViewModel>
         super(context, R.layout.favorites_listview_row, data);
         this.dataSet = data;
         this.context = context;
-
     }
 
     @Override
     public void onClick(View v) {
 
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

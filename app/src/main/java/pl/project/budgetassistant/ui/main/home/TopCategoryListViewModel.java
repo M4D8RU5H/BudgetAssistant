@@ -14,7 +14,6 @@ public class TopCategoryListViewModel {
         this.categoryName = categoryName;
         this.currency = currency;
         this.money = money;
-
     }
 
     public String getCategoryName() {

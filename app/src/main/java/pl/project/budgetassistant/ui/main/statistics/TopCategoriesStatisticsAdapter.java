@@ -18,22 +18,20 @@ import pl.project.budgetassistant.util.CurrencyHelper;
 
 public class TopCategoriesStatisticsAdapter extends ArrayAdapter<TopCategoryStatisticsListViewModel> implements View.OnClickListener {
 
-    private ArrayList<TopCategoryStatisticsListViewModel> dataSet;
+    //private ArrayList<TopCategoryStatisticsListViewModel> dataSet;
     Context context;
 
 
     public TopCategoriesStatisticsAdapter(ArrayList<TopCategoryStatisticsListViewModel> data, Context context) {
         super(context, R.layout.top_categories_statistics_listview_row, data);
-        this.dataSet = data;
+        //this.dataSet = data;
         this.context = context;
-
     }
 
     @Override
     public void onClick(View v) {
 
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
