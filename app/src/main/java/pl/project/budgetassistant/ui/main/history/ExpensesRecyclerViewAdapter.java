@@ -44,12 +44,12 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
     private ExpenseRepository expenseRepo;
     private ExpensesHistoryViewModelFactory.Model expensesHistoryViewModel;
 
-    public ExpensesRecyclerViewAdapter(FragmentActivity fragmentActivity, String currentUserUid, ExpenseRepository expenseRepo) {
+    public ExpensesRecyclerViewAdapter(FragmentActivity fragmentActivity, String currentUserUid) {
         this.fragmentActivity = fragmentActivity;
         this.currentUserUid = currentUserUid;
-        this.expenseRepo = expenseRepo;
 
-        expensesHistoryViewModel = ExpensesHistoryViewModelFactory.getModel(fragmentActivity, expenseRepo);
+        expensesHistoryViewModel = ExpensesHistoryViewModelFactory.getModel(fragmentActivity, currentUserUid);
+        expenseRepo = expensesHistoryViewModel.getRepository();
 
         UserProfileViewModelFactory.getModel(currentUserUid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<QueryResult<User>>() {
             @Override

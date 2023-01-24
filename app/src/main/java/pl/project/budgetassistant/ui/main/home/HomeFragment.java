@@ -3,7 +3,7 @@ package pl.project.budgetassistant.ui.main.home;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +27,6 @@ import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
-import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
-import pl.project.budgetassistant.persistence.viewmodel_factories.ExpensesHistoryViewModelFactory;
 import pl.project.budgetassistant.util.CalendarHelper;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
@@ -76,8 +74,8 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        topExpensesViewModel = TopExpensesViewModelFactory.getModel(getActivity(), new ExpenseRepository(getActivity(), getCurrentUserUid()));
-        expenseRepo = topExpensesViewModel.getExpenseRepository(getActivity());
+        topExpensesViewModel = TopExpensesViewModelFactory.getModel(getActivity(), getCurrentUserUid());
+        expenseRepo = topExpensesViewModel.getRepository();
 
         categoryModelsHome = new ArrayList<>();
 

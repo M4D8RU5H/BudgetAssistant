@@ -1,5 +1,6 @@
 package pl.project.budgetassistant.persistence.viewmodel_factories;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -13,24 +14,26 @@ import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.viewmodels.ExpensesBaseViewModel;
 
 public class TopExpensesStatisticsViewModelFactory implements ViewModelProvider.Factory {
-    private ExpenseRepository expenseRepo;
+    private LifecycleOwner lifecycleOwner;
+    private String currentUserUid;
 
-    TopExpensesStatisticsViewModelFactory(ExpenseRepository expenseRepo) {
-        this.expenseRepo = expenseRepo;
+    TopExpensesStatisticsViewModelFactory(LifecycleOwner lifecycleOwner, String currentUserUid) {
+        this.lifecycleOwner = lifecycleOwner;
+        this.currentUserUid = currentUserUid;
     }
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) new Model(expenseRepo);
+        return (T) new Model(lifecycleOwner, currentUserUid);
     }
 
-    public static Model getModel(FragmentActivity activity, ExpenseRepository expenseRepo) {
-        return ViewModelProviders.of(activity, new TopExpensesStatisticsViewModelFactory(expenseRepo)).get(Model.class);
+    public static Model getModel(FragmentActivity activity, String currentUserUid) {
+        return ViewModelProviders.of(activity, new TopExpensesStatisticsViewModelFactory(activity, currentUserUid)).get(Model.class);
     }
 
     public static class Model extends ExpensesBaseViewModel {
-        public Model(ExpenseRepository expenseRepo) {
-            super(expenseRepo);
+        public Model(LifecycleOwner lifecycleOwner, String currentUserUid) {
+            super(lifecycleOwner, currentUserUid);
         }
     }
 }

@@ -1,19 +1,10 @@
 package pl.project.budgetassistant.persistence.viewmodels;
 
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
-import androidx.annotation.Nullable;
-
-import com.google.firebase.database.Query;
 
 import java.util.Observable;
 
-import pl.project.budgetassistant.persistence.firebase.QueryResult;
-import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
-import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataSet;
-import pl.project.budgetassistant.persistence.firebase.ListDataSet;
-import pl.project.budgetassistant.models.Expense;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 
@@ -21,9 +12,9 @@ public class ExpensesBaseViewModel extends ViewModel implements java.util.Observ
     protected ExpenseRepository expenseRepo;
     protected UpdateCommand updateCommand;
 
-    public ExpensesBaseViewModel(ExpenseRepository expenseRepo) {
-        if (expenseRepo != null && this.expenseRepo == null) {
-            this.expenseRepo = expenseRepo;
+    public ExpensesBaseViewModel(LifecycleOwner lifecycleOwner, String currentUserUid) {
+        if (lifecycleOwner != null && currentUserUid != null) {
+            expenseRepo = new ExpenseRepository(lifecycleOwner, currentUserUid);
             expenseRepo.addObserver(this);
         }
     }
@@ -33,11 +24,11 @@ public class ExpensesBaseViewModel extends ViewModel implements java.util.Observ
         updateCommand.execute();
     }
 
-    public ExpenseRepository getExpenseRepository(LifecycleOwner owner) {
-        if (expenseRepo != null) {
-            expenseRepo.setLifecycleOwner(owner);
-        }
+    public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        expenseRepo.setLifecycleOwner(lifecycleOwner);
+    }
 
+    public ExpenseRepository getRepository() {
         return expenseRepo;
     }
 

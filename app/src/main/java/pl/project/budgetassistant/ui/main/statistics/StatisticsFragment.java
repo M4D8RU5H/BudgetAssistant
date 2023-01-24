@@ -1,5 +1,6 @@
 package pl.project.budgetassistant.ui.main.statistics;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -82,8 +83,8 @@ public class StatisticsFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        expenseRepo = new ExpenseRepository(getActivity(), getCurrentUserUid());
-        topExpensesStatisticsViewModel = TopExpensesStatisticsViewModelFactory.getModel(getActivity(), expenseRepo);
+        topExpensesStatisticsViewModel = TopExpensesStatisticsViewModelFactory.getModel(getActivity(), getCurrentUserUid());
+        expenseRepo = topExpensesStatisticsViewModel.getRepository();
 
         pieChart = view.findViewById(R.id.pie_chart);
         dividerTextView = view.findViewById(R.id.divider_textview);
@@ -128,7 +129,6 @@ public class StatisticsFragment extends BaseFragment {
         });
     }
 
-
     private void dataUpdated() {
         if (startDate != null && endDate != null && expenses != null) {
             List<Expense> expenseList = new ArrayList<>(expenses.getList());
@@ -157,6 +157,7 @@ public class StatisticsFragment extends BaseFragment {
                 categoryModelsHome.add(new TopCategoryStatisticsListViewModel(categoryModel.getKey(), categoryModel.getKey().getCategoryVisibleName(getContext()),
                         user.currency, categoryModel.getValue(), percentage));
                 if (percentage > minPercentageToShowLabelOnChart) {
+
                     Drawable drawable = getContext().getDrawable(categoryModel.getKey().getIconResourceID());
                     drawable.setTint(Color.parseColor("#FFFFFF"));
                     pieEntries.add(new PieEntry(-categoryModel.getValue(), drawable));

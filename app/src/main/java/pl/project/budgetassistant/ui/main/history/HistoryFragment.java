@@ -35,7 +35,6 @@ public class HistoryFragment extends BaseFragment {
     private ExpensesRecyclerViewAdapter historyRecyclerViewAdapter;
     private Menu menu;
     private TextView dividerTextView;
-    private ExpenseRepository expenseRepo;
     private ExpensesHistoryViewModelFactory.Model expenseHistoryViewModel;
 
     public static HistoryFragment newInstance() {
@@ -57,14 +56,13 @@ public class HistoryFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        expenseRepo = new ExpenseRepository(getActivity(), getCurrentUserUid());
-        expenseHistoryViewModel = ExpensesHistoryViewModelFactory.getModel(getActivity(), expenseRepo);
+        expenseHistoryViewModel = ExpensesHistoryViewModelFactory.getModel(getActivity(), getCurrentUserUid());
 
         dividerTextView = view.findViewById(R.id.divider_textview);
         dividerTextView.setText("OStatnie 100 elementów:");
         historyRecyclerView = view.findViewById(R.id.history_recycler_view);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        historyRecyclerViewAdapter = new ExpensesRecyclerViewAdapter(getActivity(), getCurrentUserUid(), expenseRepo);
+        historyRecyclerViewAdapter = new ExpensesRecyclerViewAdapter(getActivity(), getCurrentUserUid());
         historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
 
         historyRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
