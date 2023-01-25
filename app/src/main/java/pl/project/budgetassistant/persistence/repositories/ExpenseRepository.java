@@ -9,6 +9,7 @@ import com.google.firebase.database.Query;
 import java.util.Calendar;
 
 import pl.project.budgetassistant.models.Expense;
+import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataElement;
 import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataSet;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
@@ -17,42 +18,45 @@ public class ExpenseRepository extends Repository<Expense> {
     private Query currentQuery;
     private QueryResult queryResult;
 
-    public ExpenseRepository(LifecycleOwner owner, String currentUserUid) {
-        super(owner, currentUserUid);
+    public ExpenseRepository(LifecycleOwner lifecycleOwner, String currentUserUid) {
+        super(lifecycleOwner, currentUserUid);
 
-        childNodeName = "expenses";
         currentQuery = FirebaseDatabase.getInstance().getReference()
                 .child("expenses").child(currentUserUid).orderByChild("timestamp").limitToFirst(500);
-        liveDataSet = new FirebaseQueryLiveDataSet<>(Expense.class, currentQuery);
 
-        liveDataSet.observe(owner, (Observer<? super QueryResult>) result -> { //Do metody observe przekazuje argument (obiekt pewnej klasy) do którego zostaną przypisane dane z bazy
+        liveDataSet = new FirebaseQueryLiveDataSet<>(Expense.class, currentQuery);
+        liveDataSet.observe(lifecycleOwner, (Observer<? super QueryResult>) result -> { //Do metody observe przekazuje argument (obiekt pewnej klasy) do którego zostaną przypisane dane z bazy
             queryResult = result;
             notifyObservers();
         });
     }
 
-    public void setLifecycleOwner(LifecycleOwner owner) {
-        liveDataSet.observe(owner, (Observer<? super QueryResult>) result -> { //Do metody observe przekazuje argument (obiekt pewnej klasy) do którego zostaną przypisane dane z bazy
-            queryResult = result;
-            notifyObservers();
-        });
+    public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
+
+        if (liveDataSet != null) {
+            liveDataSet.observe(lifecycleOwner, (Observer<? super QueryResult>) result -> { //Do metody observe przekazuje argument (obiekt pewnej klasy) do którego zostaną przypisane dane z bazy
+                queryResult = result;
+                notifyObservers();
+            });
+        } else if (liveDataElement != null) {
+            liveDataElement.observe(lifecycleOwner, (Observer<? super QueryResult>) result -> { //Do metody observe przekazuje argument (obiekt pewnej klasy) do którego zostaną przypisane dane z bazy
+                queryResult = result;
+                notifyObservers();
+            });
+        }
     }
 
     public Expense get(String uid) {
-        //return (Expense) database.child(childNodeName).child(currentUserUid).child(uid);
-        return null;
-    }
-
-    public ListDataSet<Expense> GetAll() {
         Query newQuery = FirebaseDatabase.getInstance().getReference()
-                .child("expenses").child(currentUserUid).orderByChild("timestamp");
+                .child("expenses").child(uid).child(uid);
 
         if (!areQueriesTheSame(currentQuery, newQuery)) {
-            liveDataSet.setQuery(newQuery);
             currentQuery = newQuery;
+            configureLiveDataElement();
         }
 
-        return (ListDataSet<Expense>) queryResult.getResult();
+        return (Expense) queryResult.getResult();
     }
 
     public ListDataSet<Expense> getFirst(int count) {
@@ -60,8 +64,8 @@ public class ExpenseRepository extends Repository<Expense> {
                 .child("expenses").child(currentUserUid).orderByChild("timestamp").limitToFirst(count);
 
         if (!areQueriesTheSame(currentQuery, newQuery)) {
-            liveDataSet.setQuery(newQuery);
             currentQuery = newQuery;
+            configureLiveDataSet();
         }
 
         return (ListDataSet<Expense>) queryResult.getResult();
@@ -73,10 +77,30 @@ public class ExpenseRepository extends Repository<Expense> {
                 .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis());
 
         if (!areQueriesTheSame(currentQuery, newQuery)) {
-            liveDataSet.setQuery(newQuery);
             currentQuery = newQuery;
+            configureLiveDataSet();
         }
 
         return (ListDataSet<Expense>) queryResult.getResult();
+    }
+
+    private void configureLiveDataElement() {
+        liveDataSet = null;
+
+        liveDataElement = new FirebaseQueryLiveDataElement<>(Expense.class, currentQuery);
+
+        setLifecycleOwner(lifecycleOwner);
+    }
+
+    private void configureLiveDataSet() {
+        liveDataElement = null;
+
+        if (liveDataSet == null) {
+            liveDataSet = new FirebaseQueryLiveDataSet<>(Expense.class, currentQuery);
+        } else {
+            liveDataSet.setQuery(currentQuery);
+        }
+
+        setLifecycleOwner(lifecycleOwner);
     }
 }

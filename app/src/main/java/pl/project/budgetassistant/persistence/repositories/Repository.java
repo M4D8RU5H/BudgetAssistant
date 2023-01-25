@@ -17,10 +17,10 @@ public abstract class Repository<T> extends Observable{
     protected Class<T> genericTypeClass;
     protected String childNodeName;
     protected String currentUserUid;
-    protected LifecycleOwner owner;
+    protected LifecycleOwner lifecycleOwner;
 
-    public Repository(LifecycleOwner owner, String currentUserUid) {
-        this.owner = owner;
+    public Repository(LifecycleOwner lifecycleOwner, String currentUserUid) {
+        this.lifecycleOwner = lifecycleOwner;
         this.currentUserUid = currentUserUid;
         //database = FirebaseDatabase.getInstance().getReference();
         //liveData = new FirebaseQueryLiveDataElement<T>(genericTypeClass, database);
