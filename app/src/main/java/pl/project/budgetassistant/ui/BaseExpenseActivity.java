@@ -23,10 +23,20 @@ import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.models.Expense;
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
+import pl.project.budgetassistant.persistence.repositories.UserRepository;
+import pl.project.budgetassistant.persistence.viewmodel_factories.ExpenseViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
+import pl.project.budgetassistant.persistence.viewmodels.ExpenseBaseViewModel;
+import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 
 
 public abstract class BaseExpenseActivity extends BaseActivity {
+    protected ExpenseBaseViewModel expenseViewModel;
+    protected UserProfileBaseViewModel userViewModel;
+    protected ExpenseRepository expenseRepo;
+    protected UserRepository userRepo;
     protected Spinner selectCategorySpinner;
     protected TextInputEditText selectNameEditText;
     protected Calendar chosenDate;
@@ -41,6 +51,13 @@ public abstract class BaseExpenseActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        expenseViewModel = ExpenseViewModelFactory.getModel(this, getCurrentUserUid());
+        expenseRepo = expenseViewModel.getRepository();
+
+        userViewModel = UserProfileViewModelFactory.getModel(this, getCurrentUserUid());
+        userRepo = userViewModel.getRepository();
+
         configureUI();
 
         selectCategorySpinner = findViewById(R.id.select_category_spinner);
@@ -68,13 +85,11 @@ public abstract class BaseExpenseActivity extends BaseActivity {
             }
         });
 
-        UserProfileViewModelFactory.getModel(getCurrentUserUid(), this).observe(this, new FirebaseObserver<QueryResult<User>>() {
+        userViewModel.setUpdateCommand(new UpdateCommand() {
             @Override
-            public void onChanged(QueryResult<User> queryResult) {
-                if (queryResult.hasNoError()) {
-                    user = queryResult.getResult();
-                    dateUpdated();
-                }
+            public void execute() {
+                user = userRepo.getCurrentUser();
+                dateUpdated();
             }
         });
     }

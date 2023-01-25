@@ -3,6 +3,7 @@ package pl.project.budgetassistant.ui.main.home;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,6 +28,9 @@ import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
+import pl.project.budgetassistant.persistence.repositories.UserRepository;
+import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 import pl.project.budgetassistant.util.CalendarHelper;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
@@ -45,6 +49,8 @@ public class HomeFragment extends BaseFragment {
     private ListDataSet<Expense> expenses;
     private ExpenseRepository expenseRepo;
     private TopExpensesViewModelFactory.Model topExpensesViewModel;
+    private UserProfileBaseViewModel userViewModel;
+    private UserRepository userRepo;
 
     public static final CharSequence TITLE = "Strona główna";
     private Gauge gauge;
@@ -77,6 +83,9 @@ public class HomeFragment extends BaseFragment {
         topExpensesViewModel = TopExpensesViewModelFactory.getModel(getActivity(), getCurrentUserUid());
         expenseRepo = topExpensesViewModel.getRepository();
 
+        userViewModel = UserProfileViewModelFactory.getModel(getActivity(), getCurrentUserUid());
+        userRepo = userViewModel.getRepository();
+
         categoryModelsHome = new ArrayList<>();
 
         gauge = view.findViewById(R.id.gauge);
@@ -92,22 +101,20 @@ public class HomeFragment extends BaseFragment {
         adapter = new TopCategoriesAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-        UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<User>>() {
-            @Override
-            public void onChanged(QueryResult<User> queryResult) {
-                if (queryResult.hasNoError()) {
-                    HomeFragment.this.user = queryResult.getResult();
-                    dataUpdated();
+        userViewModel.setUpdateCommand(() -> {
+            user = userRepo.getCurrentUser();
 
-                    Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
-                    Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
+            if (user == null) return;
 
-                    topExpensesViewModel.setUpdateCommand(() -> {
-                        expenses = expenseRepo.getFromDateRange(startDate, endDate);
-                        dataUpdated();
-                    });
-                }
-            }
+            dataUpdated();
+
+            Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
+            Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
+
+            topExpensesViewModel.setUpdateCommand(() -> {
+                expenses = expenseRepo.getFromDateRange(startDate, endDate);
+                dataUpdated();
+            });
         });
     }
 

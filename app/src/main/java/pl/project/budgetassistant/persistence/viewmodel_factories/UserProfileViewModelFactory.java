@@ -1,5 +1,6 @@
 package pl.project.budgetassistant.persistence.viewmodel_factories;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -11,23 +12,20 @@ import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 
 public class UserProfileViewModelFactory implements ViewModelProvider.Factory {
-    private String uid;
+    private LifecycleOwner lifecycleOwner;
+    private String currentUserUid;
 
-    private UserProfileViewModelFactory(String uid) {
-        this.uid = uid;
-    }
-
-    public static void saveModel(String uid, User user) {
-        FirebaseDatabase.getInstance().getReference()
-                .child("users").child(uid).setValue(user);
+    private UserProfileViewModelFactory(LifecycleOwner lifecycleOwner, String currentUserUid) {
+        this.lifecycleOwner = lifecycleOwner;
+        this.currentUserUid = currentUserUid;
     }
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) new UserProfileBaseViewModel(uid);
+        return (T) new UserProfileBaseViewModel(lifecycleOwner, currentUserUid);
     }
 
-    public static UserProfileBaseViewModel getModel(String uid, FragmentActivity activity) {
-        return ViewModelProviders.of(activity, new UserProfileViewModelFactory(uid)).get(UserProfileBaseViewModel.class);
+    public static UserProfileBaseViewModel getModel(FragmentActivity activity, String currentUserUid) {
+        return ViewModelProviders.of(activity, new UserProfileViewModelFactory(activity, currentUserUid)).get(UserProfileBaseViewModel.class);
     }
 }

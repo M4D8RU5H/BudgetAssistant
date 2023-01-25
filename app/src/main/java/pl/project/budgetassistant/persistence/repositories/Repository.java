@@ -9,8 +9,9 @@ import java.util.List;
 
 import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataElement;
 import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataSet;
+import pl.project.budgetassistant.persistence.observable.Observable;
 
-public abstract class Repository<T> extends Observable{
+public abstract class Repository<T> extends Observable {
     protected DatabaseReference database;
     protected FirebaseQueryLiveDataElement<T> liveDataElement;
     protected FirebaseQueryLiveDataSet<T> liveDataSet;

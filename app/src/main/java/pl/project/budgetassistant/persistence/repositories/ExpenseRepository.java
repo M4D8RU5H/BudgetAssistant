@@ -22,22 +22,6 @@ public class ExpenseRepository extends Repository<Expense> {
         super(lifecycleOwner, currentUserUid);
     }
 
-    public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
-        this.lifecycleOwner = lifecycleOwner;
-
-        if (liveDataSet != null) {
-            liveDataSet.observe(lifecycleOwner, (Observer<? super QueryResult>) result -> { //Do metody observe przekazuje argument (obiekt pewnej klasy) do którego zostaną przypisane dane z bazy
-                queryResult = result;
-                notifyObservers();
-            });
-        } else if (liveDataElement != null) {
-            liveDataElement.observe(lifecycleOwner, (Observer<? super QueryResult>) result -> { //Do metody observe przekazuje argument (obiekt pewnej klasy) do którego zostaną przypisane dane z bazy
-                queryResult = result;
-                notifyObservers();
-            });
-        }
-    }
-
     public Expense get(String expenseUid) {
         Query newQuery = FirebaseDatabase.getInstance().getReference()
                 .child("expenses").child(currentUserUid).child(expenseUid);
@@ -98,6 +82,22 @@ public class ExpenseRepository extends Repository<Expense> {
 
         FirebaseDatabase.getInstance().getReference().child("expenses").child(currentUserUid)
             .child(expenseUid).removeValue();
+    }
+
+    public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
+
+        if (liveDataSet != null) {
+            liveDataSet.observe(lifecycleOwner, (Observer<? super QueryResult>) result -> {
+                queryResult = result;
+                notifyObservers();
+            });
+        } else if (liveDataElement != null) {
+            liveDataElement.observe(lifecycleOwner, (Observer<? super QueryResult>) result -> {
+                queryResult = result;
+                notifyObservers();
+            });
+        }
     }
 
     private void configureLiveDataElement() {

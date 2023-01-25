@@ -24,10 +24,13 @@ import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
+import pl.project.budgetassistant.persistence.repositories.UserRepository;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.ExpensesHistoryViewModelFactory;
 import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.models.Expense;
+import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.ui.main.history.edit_expense.EditExpenseActivity;
@@ -43,6 +46,8 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
     private boolean firstUserSync = false;
     private ExpenseRepository expenseRepo;
     private ExpensesHistoryViewModelFactory.Model expensesHistoryViewModel;
+    private UserProfileBaseViewModel userViewModel;
+    private UserRepository userRepo;
 
     public ExpensesRecyclerViewAdapter(FragmentActivity fragmentActivity, String currentUserUid) {
         this.fragmentActivity = fragmentActivity;
@@ -51,22 +56,21 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
         expensesHistoryViewModel = ExpensesHistoryViewModelFactory.getModel(fragmentActivity, currentUserUid);
         expenseRepo = expensesHistoryViewModel.getRepository();
 
-        UserProfileViewModelFactory.getModel(currentUserUid, fragmentActivity).observe(fragmentActivity, new FirebaseObserver<QueryResult<User>>() {
-            @Override
-            public void onChanged(QueryResult<User> element) {
-                if(!element.hasNoError()) { return; }
+        userViewModel = UserProfileViewModelFactory.getModel(fragmentActivity, currentUserUid);
+        userRepo = userViewModel.getRepository();
 
-                ExpensesRecyclerViewAdapter.this.user = element.getResult();
-                if(!firstUserSync) {
-                    expensesHistoryViewModel.setUpdateCommand(() -> {
-                        expenses = expenseRepo.getFirst(500);
-                        expenses.notifyRecycler(ExpensesRecyclerViewAdapter.this);
-                    });
-                }
+        userViewModel.setUpdateCommand(() -> {
+            user = userRepo.getCurrentUser();
 
-                notifyDataSetChanged();
-                firstUserSync = true;
+            if(!firstUserSync) {
+                expensesHistoryViewModel.setUpdateCommand(() -> {
+                    expenses = expenseRepo.getFirst(500);
+                    expenses.notifyRecycler(ExpensesRecyclerViewAdapter.this);
+                });
             }
+
+            notifyDataSetChanged();
+            firstUserSync = true;
         });
     }
 
@@ -79,7 +83,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
 
     @Override
     public void onBindViewHolder(ExpenseHolder holder, int position) {
-        String id = expenses.getIDList().get(position);
+        String expenseUid = expenses.getIDList().get(position);
         Expense expense = expenses.getList().get(position);
         Category category = CategoriesHelper.searchCategory(expense.categoryId);
         holder.iconImageView.setImageResource(category.getIconResourceID());
@@ -97,7 +101,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
         holder.view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                createDeleteDialog(id, currentUserUid, expense.amount, fragmentActivity);
+                createDeleteDialog(expenseUid, expense.amount, fragmentActivity);
                 return false;
             }
         });
@@ -106,7 +110,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(fragmentActivity, EditExpenseActivity.class);
-                intent.putExtra("expense-id", id);
+                intent.putExtra("expense-uid", expenseUid);
                 fragmentActivity.startActivity(intent);
             }
         });
@@ -118,16 +122,17 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
         return expenses.getList().size();
     }
 
-    private void createDeleteDialog(String id, String uid, long balanceDifference, Context context) {
+    private void createDeleteDialog(String id, long balanceDifference, Context context) {
         new AlertDialog.Builder(context)
                 .setMessage("Czy chcesz usunąć?")
                 .setPositiveButton("Usuń", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        FirebaseDatabase.getInstance().getReference()
-                                .child("expenses").child(uid).child(id).removeValue();
+                        expenseRepo.remove(id);
+
                         user.budget.spentAmount -= balanceDifference;
-                        UserProfileViewModelFactory.saveModel(uid, user);
+                        userRepo.update(user);
+
                         dialog.dismiss();
                     }
 

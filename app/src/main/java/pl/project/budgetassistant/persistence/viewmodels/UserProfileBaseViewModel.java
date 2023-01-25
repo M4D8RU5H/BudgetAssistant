@@ -1,33 +1,45 @@
 package pl.project.budgetassistant.persistence.viewmodels;
 
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
-import androidx.annotation.Nullable;
 
-import com.google.firebase.database.FirebaseDatabase;
+import java.util.Observable;
 
-import pl.project.budgetassistant.persistence.firebase.QueryResult;
-import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
-import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataElement;
-import pl.project.budgetassistant.models.User;
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
+import pl.project.budgetassistant.persistence.repositories.UserRepository;
 
-public class UserProfileBaseViewModel extends ViewModel {
-    private final FirebaseQueryLiveDataElement<User> liveData;
+public class UserProfileBaseViewModel extends ViewModel implements java.util.Observer{
+    protected UserRepository userRepo;
+    protected UpdateCommand updateCommand;
 
-    public UserProfileBaseViewModel(String uid) {
-        liveData = new FirebaseQueryLiveDataElement<>(User.class,
-                FirebaseDatabase.getInstance().getReference().child("users").child(uid));
+    public UserProfileBaseViewModel(LifecycleOwner lifecycleOwner, String currentUserUid) {
+        if (lifecycleOwner != null && currentUserUid != null) {
+            userRepo = new UserRepository(lifecycleOwner, currentUserUid);
+            userRepo.addObserver(this);
+        }
     }
 
-    public void observe(LifecycleOwner owner, FirebaseObserver<QueryResult<User>> observer) {
-        if (liveData.getValue() != null) { observer.onChanged(liveData.getValue()); }
+    public void setUpdateCommand(UpdateCommand updateCommand) {
+        this.updateCommand = updateCommand;
 
-        liveData.observe(owner, new Observer<QueryResult<User>>() {
-            @Override
-            public void onChanged(@Nullable QueryResult<User> queryResult) {
-                if(queryResult != null) observer.onChanged(queryResult);
-            }
-        });
+        if (updateCommand != null) {
+            updateCommand.execute();
+        }
+    }
+
+    public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        userRepo.setLifecycleOwner(lifecycleOwner);
+    }
+
+    public UserRepository getRepository() {
+        return userRepo;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (updateCommand != null) {
+            updateCommand.execute();
+        }
     }
 }

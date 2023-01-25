@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.persistence.repositories;
+package pl.project.budgetassistant.persistence.observable;
 
 import java.util.ArrayList;
 import java.util.List;

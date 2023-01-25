@@ -18,6 +18,9 @@ import java.util.ArrayList;
 
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.exceptions.NumberRangeException;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
+import pl.project.budgetassistant.persistence.repositories.UserRepository;
+import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 import pl.project.budgetassistant.ui.signin.SignInActivity;
 import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
@@ -27,11 +30,19 @@ import pl.project.budgetassistant.util.CurrencyHelper;
 
 public class OptionsFragment extends PreferenceFragmentCompat {
     User user;
+
+    UserProfileBaseViewModel userViewModel;
+    UserRepository userRepo;
+
     ArrayList<Preference> preferences = new ArrayList<>();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        userViewModel = UserProfileViewModelFactory.getModel(getActivity(), getCurrentUserUid());
+        userRepo = userViewModel.getRepository();
+
         addPreferencesFromResource(R.xml.app_preferences);
 
         Field[] fields = R.string.class.getFields();
@@ -49,14 +60,11 @@ public class OptionsFragment extends PreferenceFragmentCompat {
             preference.setEnabled(false);
         }
 
-        UserProfileViewModelFactory.getModel(getUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<User>>() {
+        userViewModel.setUpdateCommand(() -> {
+            user = userRepo.getCurrentUser();
+            if (user == null) return;
 
-            @Override
-            public void onChanged(QueryResult<User> element) {
-                if (!element.hasNoError()) return;
-                OptionsFragment.this.user = element.getResult();
-                dataUpdated();
-            }
+            dataUpdated();
         });
 
         Preference logoutPreference = findPreference(getString(R.string.pref_key_logout));
@@ -208,7 +216,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
     }
 
     private void saveUser(User user) {
-        UserProfileViewModelFactory.saveModel(getUid(), user);
+        userRepo.update(user);
     }
 
     @Override
@@ -216,7 +224,7 @@ public class OptionsFragment extends PreferenceFragmentCompat {
 
     }
 
-    public String getUid() {
+    public String getCurrentUserUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 

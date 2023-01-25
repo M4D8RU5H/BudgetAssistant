@@ -41,8 +41,10 @@ import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.models.Expense;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
+import pl.project.budgetassistant.persistence.repositories.UserRepository;
 import pl.project.budgetassistant.persistence.viewmodel_factories.TopExpensesStatisticsViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
+import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 import pl.project.budgetassistant.util.CalendarHelper;
 import pl.project.budgetassistant.util.CategoriesHelper;
 import pl.project.budgetassistant.models.Category;
@@ -53,6 +55,8 @@ public class StatisticsFragment extends BaseFragment {
     public static final CharSequence TITLE = "Statystyki";
     private ExpenseRepository expenseRepo;
     private TopExpensesStatisticsViewModelFactory.Model topExpensesStatisticsViewModel;
+    protected UserProfileBaseViewModel userViewModel;
+    protected UserRepository userRepo;
 
     private Menu menu;
     private Calendar startDate;
@@ -86,6 +90,9 @@ public class StatisticsFragment extends BaseFragment {
         topExpensesStatisticsViewModel = TopExpensesStatisticsViewModelFactory.getModel(getActivity(), getCurrentUserUid());
         expenseRepo = topExpensesStatisticsViewModel.getRepository();
 
+        userViewModel = UserProfileViewModelFactory.getModel(getActivity(), getCurrentUserUid());
+        userRepo = userViewModel.getRepository();
+
         pieChart = view.findViewById(R.id.pie_chart);
         dividerTextView = view.findViewById(R.id.divider_textview);
         View incomesExpensesView = view.findViewById(R.id.incomes_expenses_view);
@@ -96,36 +103,15 @@ public class StatisticsFragment extends BaseFragment {
         adapter = new TopCategoriesStatisticsAdapter(categoryModelsHome, getActivity().getApplicationContext());
         favoriteListView.setAdapter(adapter);
 
-//        TopExpensesStatisticsViewModelFactory.getModel(getCurrentUserUid(), getActivity(), null).observe(this, new FirebaseObserver<QueryResult<ListDataSet<Expense>>>() {
-//            @Override
-//            public void onChanged(QueryResult<ListDataSet<Expense>> queryResult) {
-//                if (queryResult.hasNoError()) {
-//                    StatisticsFragment.this.expenses = queryResult.getResult();
-//                    dataUpdated();
-//                }
-//            }
-//        });
+        userViewModel.setUpdateCommand(() -> {
+            user = userRepo.getCurrentUser();
 
+            startDate = CalendarHelper.getUserPeriodStartDate(user);
+            endDate = CalendarHelper.getUserPeriodEndDate(user);
 
-//        topExpensesStatisticsViewModel.setUpdateCommand(() -> {
-//            expenses = expenseRepo.getFirst(500);
-//            dataUpdated();
-//        });
-
-        UserProfileViewModelFactory.getModel(getCurrentUserUid(), getActivity()).observe(this, new FirebaseObserver<QueryResult<User>>() {
-            @Override
-            public void onChanged(QueryResult<User> queryResult) {
-                if (queryResult.hasNoError()) {
-                    StatisticsFragment.this.user = queryResult.getResult();
-
-                    startDate = CalendarHelper.getUserPeriodStartDate(user);
-                    endDate = CalendarHelper.getUserPeriodEndDate(user);
-
-                    updateCalendarIcon(false);
-                    calendarUpdated();
-                    dataUpdated();
-                }
-            }
+            updateCalendarIcon(false);
+            calendarUpdated();
+            dataUpdated();
         });
     }
 

@@ -15,11 +15,13 @@ import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
+import pl.project.budgetassistant.persistence.repositories.UserRepository;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.ExpenseViewModelFactory;
 import pl.project.budgetassistant.models.DefaultCategories;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.persistence.viewmodels.ExpenseBaseViewModel;
+import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 import pl.project.budgetassistant.ui.BaseExpenseActivity;
 import pl.project.budgetassistant.ui.add_expense.ExpenseCategoriesAdapter;
 import pl.project.budgetassistant.util.CurrencyHelper;
@@ -27,8 +29,6 @@ import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.models.Expense;
 
 public class EditExpenseActivity extends BaseExpenseActivity {
-    private ExpenseBaseViewModel expenseViewModel;
-    private ExpenseRepository expenseRepo;
     private Expense expense;
     private String expenseUid;
     private Button editExpenseButton;
@@ -40,9 +40,6 @@ public class EditExpenseActivity extends BaseExpenseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Edytuj wydatek");
-
-        expenseViewModel = ExpenseViewModelFactory.getModel(this, getCurrentUserUid());
-        expenseRepo = expenseViewModel.getRepository();
 
         editExpenseButton = findViewById(R.id.edit_entry_button);
         removeExpenseButton = findViewById(R.id.remove_entry_button);
@@ -80,14 +77,11 @@ public class EditExpenseActivity extends BaseExpenseActivity {
             }
         });
 
-        expenseUid = getIntent().getExtras().getString("expense-id");
+        expenseUid = getIntent().getExtras().getString("expense-uid");
 
-        expenseViewModel.setUpdateCommand(new UpdateCommand() {
-            @Override
-            public void execute() {
-                expense = expenseRepo.get(expenseUid);
-                dateUpdated();
-            }
+        expenseViewModel.setUpdateCommand(() -> {
+            expense = expenseRepo.get(expenseUid);
+            dateUpdated();
         });
     }
 
@@ -138,14 +132,14 @@ public class EditExpenseActivity extends BaseExpenseActivity {
         expenseRepo.update(expenseUid, new Expense(entryCategory, entryName, entryDate.getTime(), amount));
 
         user.budget.spentAmount += finalBalanceDifference;
-        UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
+        userRepo.update(user);
 
         finish();
     }
 
     private void removeExpense() {
         user.budget.spentAmount -= expense.amount;
-        UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
+        userRepo.update(user);
 
         expenseRepo.remove(expenseUid);
 
