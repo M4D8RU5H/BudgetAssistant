@@ -105,6 +105,7 @@ public class StatisticsFragment extends BaseFragment {
 
         userViewModel.setUpdateCommand(() -> {
             user = userRepo.getCurrentUser();
+            if (user == null) return;
 
             startDate = CalendarHelper.getUserPeriodStartDate(user);
             endDate = CalendarHelper.getUserPeriodEndDate(user);

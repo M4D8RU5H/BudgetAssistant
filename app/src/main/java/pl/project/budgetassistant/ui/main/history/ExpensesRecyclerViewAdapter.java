@@ -61,6 +61,7 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
 
         userViewModel.setUpdateCommand(() -> {
             user = userRepo.getCurrentUser();
+            if (user == null) return;
 
             if(!firstUserSync) {
                 expensesHistoryViewModel.setUpdateCommand(() -> {
