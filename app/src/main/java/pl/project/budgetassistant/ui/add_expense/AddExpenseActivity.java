@@ -12,10 +12,12 @@ import java.util.List;
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UserRepository;
 import pl.project.budgetassistant.persistence.viewmodel_factories.ExpenseViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.models.DefaultCategories;
 import pl.project.budgetassistant.persistence.viewmodels.ExpenseBaseViewModel;
+import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 import pl.project.budgetassistant.ui.BaseExpenseActivity;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.util.CurrencyHelper;
@@ -23,8 +25,6 @@ import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.models.Expense;
 
 public class AddExpenseActivity extends BaseExpenseActivity {
-    private ExpenseBaseViewModel expenseViewModel;
-    private ExpenseRepository expenseRepo;
     private Button addEntryButton;
 
     @Override
@@ -33,9 +33,6 @@ public class AddExpenseActivity extends BaseExpenseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Dodaj wydatek");
-
-        expenseViewModel = ExpenseViewModelFactory.getModel(this, getCurrentUserUid());
-        expenseRepo = expenseViewModel.getRepository();
 
         addEntryButton = findViewById(R.id.add_entry_button);
 
@@ -80,7 +77,7 @@ public class AddExpenseActivity extends BaseExpenseActivity {
         expenseRepo.add(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
 
         user.budget.spentAmount += amount;
-        UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
+        userRepo.update(user);
 
         finish();
     }
