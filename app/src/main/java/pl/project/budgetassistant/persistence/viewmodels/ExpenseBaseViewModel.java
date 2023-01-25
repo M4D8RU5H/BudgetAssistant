@@ -7,32 +7,43 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Observable;
+
 import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataElement;
 import pl.project.budgetassistant.models.Expense;
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 
-public class ExpenseBaseViewModel extends ViewModel {
-    protected final FirebaseQueryLiveDataElement<Expense> liveData;
-    protected final String uid;
+public class ExpenseBaseViewModel extends ViewModel implements java.util.Observer {
+    protected ExpenseRepository expenseRepo;
+    protected UpdateCommand updateCommand;
 
-    public ExpenseBaseViewModel(String uid, String expenseId) {
-        this.uid=uid;
-        liveData = new FirebaseQueryLiveDataElement<>(Expense.class, FirebaseDatabase.getInstance().getReference()
-                .child("expenses").child(uid).child(expenseId));
+    public ExpenseBaseViewModel(LifecycleOwner lifecycleOwner, String currentUserUid) {
+        if (lifecycleOwner != null && currentUserUid != null) {
+            expenseRepo = new ExpenseRepository(lifecycleOwner, currentUserUid);
+            expenseRepo.addObserver(this);
+        }
     }
 
-    public void observe(LifecycleOwner owner, FirebaseObserver<QueryResult<Expense>> observer) {
-        if(liveData.getValue() != null) observer.onChanged(liveData.getValue());
-        liveData.observe(owner, new Observer<QueryResult<Expense>>() {
-            @Override
-            public void onChanged(@Nullable QueryResult<Expense> element) {
-                if(element != null) observer.onChanged(element);
-            }
-        });
+    public void setUpdateCommand(UpdateCommand updateCommand) {
+        this.updateCommand = updateCommand;
+        updateCommand.execute();
     }
 
-    public void removeObserver(Observer<QueryResult<Expense>> observer) {
-        liveData.removeObserver(observer);
+    public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        expenseRepo.setLifecycleOwner(lifecycleOwner);
+    }
+
+    public ExpenseRepository getRepository() {
+        return expenseRepo;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (updateCommand != null) {
+            updateCommand.execute();
+        }
     }
 }

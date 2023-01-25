@@ -20,15 +20,6 @@ public class ExpenseRepository extends Repository<Expense> {
 
     public ExpenseRepository(LifecycleOwner lifecycleOwner, String currentUserUid) {
         super(lifecycleOwner, currentUserUid);
-
-        currentQuery = FirebaseDatabase.getInstance().getReference()
-                .child("expenses").child(currentUserUid).orderByChild("timestamp").limitToFirst(500);
-
-        liveDataSet = new FirebaseQueryLiveDataSet<>(Expense.class, currentQuery);
-        liveDataSet.observe(lifecycleOwner, (Observer<? super QueryResult>) result -> { //Do metody observe przekazuje argument (obiekt pewnej klasy) do którego zostaną przypisane dane z bazy
-            queryResult = result;
-            notifyObservers();
-        });
     }
 
     public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
@@ -47,16 +38,20 @@ public class ExpenseRepository extends Repository<Expense> {
         }
     }
 
-    public Expense get(String uid) {
+    public Expense get(String expenseUid) {
         Query newQuery = FirebaseDatabase.getInstance().getReference()
-                .child("expenses").child(uid).child(uid);
+                .child("expenses").child(currentUserUid).child(expenseUid);
 
         if (!areQueriesTheSame(currentQuery, newQuery)) {
             currentQuery = newQuery;
             configureLiveDataElement();
         }
 
-        return (Expense) queryResult.getResult();
+        if (queryResult != null) {
+            return (Expense) queryResult.getResult();
+        } else {
+            return null;
+        }
     }
 
     public ListDataSet<Expense> getFirst(int count) {
@@ -82,6 +77,27 @@ public class ExpenseRepository extends Repository<Expense> {
         }
 
         return (ListDataSet<Expense>) queryResult.getResult();
+    }
+
+    public void add(Expense expense) {
+        currentQuery = null;
+
+        FirebaseDatabase.getInstance().getReference().child("expenses").child(currentUserUid)
+                .push().setValue(expense);
+    }
+
+    public void update(String expenseUid, Expense expense) {
+        currentQuery = null;
+
+        FirebaseDatabase.getInstance().getReference().child("expenses").child(currentUserUid)
+                .child(expenseUid).setValue(expense);
+    }
+
+    public void remove(String expenseUid) {
+        currentQuery = null;
+
+        FirebaseDatabase.getInstance().getReference().child("expenses").child(currentUserUid)
+            .child(expenseUid).removeValue();
     }
 
     private void configureLiveDataElement() {

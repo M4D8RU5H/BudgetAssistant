@@ -7,20 +7,19 @@ import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
-import pl.project.budgetassistant.persistence.firebase.QueryResult;
-import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
+import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
+import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.ExpenseViewModelFactory;
 import pl.project.budgetassistant.models.DefaultCategories;
 import pl.project.budgetassistant.models.Category;
+import pl.project.budgetassistant.persistence.viewmodels.ExpenseBaseViewModel;
 import pl.project.budgetassistant.ui.BaseExpenseActivity;
 import pl.project.budgetassistant.ui.add_expense.ExpenseCategoriesAdapter;
 import pl.project.budgetassistant.util.CurrencyHelper;
@@ -28,10 +27,12 @@ import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.models.Expense;
 
 public class EditExpenseActivity extends BaseExpenseActivity {
+    private ExpenseBaseViewModel expenseViewModel;
+    private ExpenseRepository expenseRepo;
     private Expense expense;
-    private String expenseId;
-    private Button editEntryButton;
-    private Button removeEntryButton;
+    private String expenseUid;
+    private Button editExpenseButton;
+    private Button removeExpenseButton;
 
     @Override
     protected void configureUI() {
@@ -40,10 +41,13 @@ public class EditExpenseActivity extends BaseExpenseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Edytuj wydatek");
 
-        editEntryButton = findViewById(R.id.edit_entry_button);
-        removeEntryButton = findViewById(R.id.remove_entry_button);
+        expenseViewModel = ExpenseViewModelFactory.getModel(this, getCurrentUserUid());
+        expenseRepo = expenseViewModel.getRepository();
 
-        editEntryButton.setOnClickListener(new View.OnClickListener() {
+        editExpenseButton = findViewById(R.id.edit_entry_button);
+        removeExpenseButton = findViewById(R.id.remove_entry_button);
+
+        editExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -59,7 +63,7 @@ public class EditExpenseActivity extends BaseExpenseActivity {
             }
         });
 
-        removeEntryButton.setOnClickListener(new View.OnClickListener() {
+        removeExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showRemoveExpenseDialog();
@@ -76,15 +80,13 @@ public class EditExpenseActivity extends BaseExpenseActivity {
             }
         });
 
-        expenseId = getIntent().getExtras().getString("expense-id");
+        expenseUid = getIntent().getExtras().getString("expense-id");
 
-        ExpenseViewModelFactory.getModel(getCurrentUserUid(), expenseId, this).observe(this, new FirebaseObserver<QueryResult<Expense>>() {
+        expenseViewModel.setUpdateCommand(new UpdateCommand() {
             @Override
-            public void onChanged(QueryResult<Expense> queryResult) {
-                if (queryResult.hasNoError()) {
-                    expense = queryResult.getResult();
-                    dateUpdated();
-                }
+            public void execute() {
+                expense = expenseRepo.get(expenseUid);
+                dateUpdated();
             }
         });
     }
@@ -106,6 +108,7 @@ public class EditExpenseActivity extends BaseExpenseActivity {
         selectCategorySpinner.post(new Runnable() {
             @Override
             public void run() {
+                if (expense == null) return;
                 ExpenseCategoriesAdapter adapter = (ExpenseCategoriesAdapter) selectCategorySpinner.getAdapter();
                 selectCategorySpinner.setSelection(adapter.getItemIndex(expense.categoryId));
             }
@@ -132,8 +135,7 @@ public class EditExpenseActivity extends BaseExpenseActivity {
 
         long finalBalanceDifference = amount - expense.amount;
 
-        FirebaseDatabase.getInstance().getReference().child("expenses").child(getCurrentUserUid())
-                .child(expenseId).setValue(new Expense(entryCategory, entryName, entryDate.getTime(), amount));
+        expenseRepo.update(expenseUid, new Expense(entryCategory, entryName, entryDate.getTime(), amount));
 
         user.budget.spentAmount += finalBalanceDifference;
         UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
@@ -145,8 +147,8 @@ public class EditExpenseActivity extends BaseExpenseActivity {
         user.budget.spentAmount -= expense.amount;
         UserProfileViewModelFactory.saveModel(getCurrentUserUid(), user);
 
-        FirebaseDatabase.getInstance().getReference().child("expenses").child(getCurrentUserUid())
-                .child(expenseId).removeValue();
+        expenseRepo.remove(expenseUid);
+
         finish();
     }
 }
