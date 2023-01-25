@@ -106,10 +106,10 @@ public class HomeFragment extends BaseFragment {
 
             if (user == null) return;
 
-            dataUpdated();
-
             Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);
             Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
+
+            dataUpdated();
 
             topExpensesViewModel.setUpdateCommand(() -> {
                 expenses = expenseRepo.getFromDateRange(startDate, endDate);
@@ -136,7 +136,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void dataUpdated() {
-        if (user == null || expenses == null) return;
+        if (user == null || expenses == null || getContext() == null) return;
 
         List<Expense> expenseList = new ArrayList<>(expenses.getList());
 
@@ -144,7 +144,6 @@ public class HomeFragment extends BaseFragment {
         Calendar endDate = CalendarHelper.getUserPeriodEndDate(user);
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM");
-
 
         long expensesSumInDateRange = 0;
         long incomesSumInDateRange = 0;
@@ -184,9 +183,9 @@ public class HomeFragment extends BaseFragment {
         gaugeRightBalanceTextView.setText(CurrencyHelper.formatCurrency(user.currency, user.budget.amountToSpend));
         gaugeRightLine1TextView.setText(dateFormat.format(endDate.getTime()));
 
-        //gauge.setPointStartColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
-        //gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
-        //gauge.setStrokeColor(ContextCompat.getColor(getContext(), R.color.gauge_gray));
+        gauge.setPointStartColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
+        gauge.setPointEndColor(ContextCompat.getColor(getContext(), R.color.gauge_white));
+        gauge.setStrokeColor(ContextCompat.getColor(getContext(), R.color.gauge_gray));
 
         long limit = user.budget.amountToSpend;
         long expenses = -expensesSumInDateRange;

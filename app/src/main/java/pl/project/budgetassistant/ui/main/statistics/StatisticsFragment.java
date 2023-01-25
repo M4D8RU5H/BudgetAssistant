@@ -117,6 +117,8 @@ public class StatisticsFragment extends BaseFragment {
     }
 
     private void dataUpdated() {
+        if (getContext() == null) return;
+
         if (startDate != null && endDate != null && expenses != null) {
             List<Expense> expenseList = new ArrayList<>(expenses.getList());
 
@@ -165,6 +167,8 @@ public class StatisticsFragment extends BaseFragment {
             pieChart.setTouchEnabled(false);
             pieChart.getLegend().setEnabled(false);
             pieChart.getDescription().setEnabled(false);
+
+            Context c = getContext();
 
             pieChart.setDrawHoleEnabled(true);
             pieChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.backgroundPrimary));

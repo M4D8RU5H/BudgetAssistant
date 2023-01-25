@@ -33,6 +33,12 @@ public class FirebaseQueryLiveDataElement<T> extends LiveData<QueryResult<T>> {
         this.query = query;
     }
 
+    public void setQuery(Query query) {
+        removeListener();
+        this.query = query;
+        setListener();
+    }
+
     private void removeListener() {
         query.removeEventListener(listener);
     }

@@ -67,10 +67,10 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
                 expensesHistoryViewModel.setUpdateCommand(() -> {
                     expenses = expenseRepo.getFirst(500);
                     expenses.notifyRecycler(ExpensesRecyclerViewAdapter.this);
+                    notifyDataSetChanged();
                 });
             }
 
-            notifyDataSetChanged();
             firstUserSync = true;
         });
     }
