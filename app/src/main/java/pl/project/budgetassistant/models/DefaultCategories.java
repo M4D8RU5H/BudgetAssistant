@@ -39,7 +39,7 @@ public class DefaultCategories {
                 Color.parseColor("#26a69a"));
     }
 
-    public Category[] getDefaultCategories() {
+    public Category[] getCategories() {
         return categories;
     }
 }

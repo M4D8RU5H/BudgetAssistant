@@ -9,13 +9,7 @@ import java.util.List;
 
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
-import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
-import pl.project.budgetassistant.persistence.repositories.UserRepository;
-import pl.project.budgetassistant.persistence.viewmodel_factories.ExpenseViewModelFactory;
-import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.models.DefaultCategories;
-import pl.project.budgetassistant.persistence.viewmodels.ExpenseBaseViewModel;
-import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 import pl.project.budgetassistant.ui.BaseExpenseActivity;
 import pl.project.budgetassistant.models.Category;
 import pl.project.budgetassistant.util.CurrencyHelper;
@@ -54,7 +48,7 @@ public class AddExpenseActivity extends BaseExpenseActivity {
     protected void dateUpdated() {
         if (user == null) return;
 
-        final List<Category> categories = Arrays.asList(DefaultCategories.getInstance().getDefaultCategories());
+        final List<Category> categories = Arrays.asList(DefaultCategories.getInstance().getCategories());
         ExpenseCategoriesAdapter categoryAdapter = new ExpenseCategoriesAdapter(this,
                 R.layout.new_entry_type_spinner_row, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

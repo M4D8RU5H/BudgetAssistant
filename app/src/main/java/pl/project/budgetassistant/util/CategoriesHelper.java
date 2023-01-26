@@ -7,7 +7,7 @@ public class CategoriesHelper {
     public static Category searchCategory(String categoryName) {
         DefaultCategories defaultCategories = DefaultCategories.getInstance();
 
-        for (Category category : defaultCategories.getDefaultCategories()) {
+        for (Category category : defaultCategories.getCategories()) {
             if (category.getCategoryID().equals(categoryName)) return category;
         }
 

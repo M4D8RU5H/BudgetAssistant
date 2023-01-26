@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel;
 import java.util.Observable;
 
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
-import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 
 public class ExpenseBaseViewModel extends ViewModel implements java.util.Observer {
     protected ExpenseRepository expenseRepo;

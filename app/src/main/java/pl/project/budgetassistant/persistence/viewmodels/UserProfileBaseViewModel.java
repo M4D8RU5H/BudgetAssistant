@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.Observable;
 
-import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
-import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 import pl.project.budgetassistant.persistence.repositories.UserRepository;
 
 public class UserProfileBaseViewModel extends ViewModel implements java.util.Observer{
