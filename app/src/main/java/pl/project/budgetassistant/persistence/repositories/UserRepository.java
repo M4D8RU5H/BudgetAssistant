@@ -11,15 +11,13 @@ import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataElem
 import pl.project.budgetassistant.persistence.firebase.QueryResult;
 
 public class UserRepository extends Repository<User> {
-    private Query currentQuery;
-    private QueryResult queryResult;
 
     public UserRepository(LifecycleOwner lifecycleOwner, String currentUserUid) {
         super(lifecycleOwner, currentUserUid);
     }
 
     public User getCurrentUser() {
-        Query newQuery = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserUid);
+        Query newQuery = database.child("users").child(currentUserUid);
 
         if (!areQueriesTheSame(currentQuery, newQuery)) {
             currentQuery = newQuery;
@@ -33,17 +31,10 @@ public class UserRepository extends Repository<User> {
         }
     }
 
-    public void add(User user) {
-        currentQuery = null;
-
-        //
-    }
-
     public void update(User user) {
         currentQuery = null;
 
-        FirebaseDatabase.getInstance().getReference()
-                .child("users").child(currentUserUid).setValue(user);
+        database.child("users").child(currentUserUid).setValue(user);
     }
 
     public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {

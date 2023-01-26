@@ -3,8 +3,6 @@ package pl.project.budgetassistant.ui.add_expense;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;

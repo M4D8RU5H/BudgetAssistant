@@ -6,11 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Calendar;
-
-import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
 import pl.project.budgetassistant.persistence.viewmodels.ExpensesBaseViewModel;
 
 public class TopExpensesViewModelFactory implements ViewModelProvider.Factory {

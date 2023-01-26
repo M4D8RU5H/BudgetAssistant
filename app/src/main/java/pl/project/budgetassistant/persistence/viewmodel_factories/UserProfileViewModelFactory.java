@@ -6,9 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.firebase.database.FirebaseDatabase;
-
-import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 
 public class UserProfileViewModelFactory implements ViewModelProvider.Factory {

@@ -15,16 +15,13 @@ import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataSet;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
 
 public class ExpenseRepository extends Repository<Expense> {
-    private Query currentQuery;
-    private QueryResult queryResult;
 
     public ExpenseRepository(LifecycleOwner lifecycleOwner, String currentUserUid) {
         super(lifecycleOwner, currentUserUid);
     }
 
     public Expense get(String expenseUid) {
-        Query newQuery = FirebaseDatabase.getInstance().getReference()
-                .child("expenses").child(currentUserUid).child(expenseUid);
+        Query newQuery = database.child("expenses").child(currentUserUid).child(expenseUid);
 
         if (!areQueriesTheSame(currentQuery, newQuery)) {
             currentQuery = newQuery;
@@ -39,8 +36,7 @@ public class ExpenseRepository extends Repository<Expense> {
     }
 
     public ListDataSet<Expense> getFirst(int count) {
-        Query newQuery = FirebaseDatabase.getInstance().getReference()
-                .child("expenses").child(currentUserUid).orderByChild("timestamp").limitToFirst(count);
+        Query newQuery = database.child("expenses").child(currentUserUid).orderByChild("timestamp").limitToFirst(count);
 
         if (!areQueriesTheSame(currentQuery, newQuery)) {
             currentQuery = newQuery;
@@ -51,8 +47,7 @@ public class ExpenseRepository extends Repository<Expense> {
     }
 
     public ListDataSet<Expense> getFromDateRange(Calendar startDate, Calendar endDate) {
-        Query newQuery = FirebaseDatabase.getInstance().getReference()
-                .child("expenses").child(currentUserUid).orderByChild("timestamp")
+        Query newQuery = database.child("expenses").child(currentUserUid).orderByChild("timestamp")
                 .startAt(-endDate.getTimeInMillis()).endAt(-startDate.getTimeInMillis());
 
         if (!areQueriesTheSame(currentQuery, newQuery)) {
@@ -65,23 +60,19 @@ public class ExpenseRepository extends Repository<Expense> {
 
     public void add(Expense expense) {
         currentQuery = null;
-
-        FirebaseDatabase.getInstance().getReference().child("expenses").child(currentUserUid)
-                .push().setValue(expense);
+        database.child("expenses").child(currentUserUid).push().setValue(expense);
     }
 
     public void update(String expenseUid, Expense expense) {
         currentQuery = null;
 
-        FirebaseDatabase.getInstance().getReference().child("expenses").child(currentUserUid)
-                .child(expenseUid).setValue(expense);
+        database.child("expenses").child(currentUserUid).child(expenseUid).setValue(expense);
     }
 
     public void remove(String expenseUid) {
         currentQuery = null;
 
-        FirebaseDatabase.getInstance().getReference().child("expenses").child(currentUserUid)
-            .child(expenseUid).removeValue();
+        database.child("expenses").child(currentUserUid).child(expenseUid).removeValue();
     }
 
     public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
