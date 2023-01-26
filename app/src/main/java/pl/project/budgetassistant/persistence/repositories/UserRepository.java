@@ -10,7 +10,7 @@ import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataElement;
 import pl.project.budgetassistant.persistence.firebase.QueryResult;
 
-public class UserRepository extends Repository<User> {
+public class UserRepository extends Repository {
 
     public UserRepository(LifecycleOwner lifecycleOwner, String currentUserUid) {
         super(lifecycleOwner, currentUserUid);

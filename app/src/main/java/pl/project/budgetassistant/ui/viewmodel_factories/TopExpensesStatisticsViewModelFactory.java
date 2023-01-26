@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.persistence.viewmodel_factories;
+package pl.project.budgetassistant.ui.viewmodel_factories;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModel;
@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.fragment.app.FragmentActivity;
 
-import pl.project.budgetassistant.persistence.viewmodels.ExpensesBaseViewModel;
+import pl.project.budgetassistant.ui.viewmodels.ExpensesBaseViewModel;
 
 public class TopExpensesStatisticsViewModelFactory implements ViewModelProvider.Factory {
     private LifecycleOwner lifecycleOwner;

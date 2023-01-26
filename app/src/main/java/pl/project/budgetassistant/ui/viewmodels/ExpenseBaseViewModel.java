@@ -1,4 +1,4 @@
-package pl.project.budgetassistant.persistence.viewmodels;
+package pl.project.budgetassistant.ui.viewmodels;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModel;

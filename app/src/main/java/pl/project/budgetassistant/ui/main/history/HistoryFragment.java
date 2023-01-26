@@ -22,8 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
-import pl.project.budgetassistant.persistence.viewmodel_factories.ExpensesHistoryViewModelFactory;
+import pl.project.budgetassistant.ui.viewmodel_factories.ExpensesHistoryViewModelFactory;
 import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.ui.options.OptionsActivity;
 

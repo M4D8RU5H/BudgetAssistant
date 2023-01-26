@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.exceptions.NumberRangeException;
 import pl.project.budgetassistant.persistence.repositories.UserRepository;
-import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
+import pl.project.budgetassistant.ui.viewmodels.UserProfileBaseViewModel;
 import pl.project.budgetassistant.ui.signin.SignInActivity;
-import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
+import pl.project.budgetassistant.ui.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.util.CurrencyHelper;
 

@@ -14,7 +14,7 @@ import pl.project.budgetassistant.persistence.firebase.QueryResult;
 import pl.project.budgetassistant.persistence.firebase.FirebaseQueryLiveDataSet;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
 
-public class ExpenseRepository extends Repository<Expense> {
+public class ExpenseRepository extends Repository {
 
     public ExpenseRepository(LifecycleOwner lifecycleOwner, String currentUserUid) {
         super(lifecycleOwner, currentUserUid);

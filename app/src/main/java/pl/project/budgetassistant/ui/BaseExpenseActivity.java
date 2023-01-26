@@ -22,12 +22,12 @@ import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
 import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.models.Expense;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
-import pl.project.budgetassistant.persistence.viewmodels.UpdateCommand;
+import pl.project.budgetassistant.ui.viewmodels.UpdateCommand;
 import pl.project.budgetassistant.persistence.repositories.UserRepository;
-import pl.project.budgetassistant.persistence.viewmodel_factories.ExpenseViewModelFactory;
-import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
-import pl.project.budgetassistant.persistence.viewmodels.ExpenseBaseViewModel;
-import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
+import pl.project.budgetassistant.ui.viewmodel_factories.ExpenseViewModelFactory;
+import pl.project.budgetassistant.ui.viewmodel_factories.UserProfileViewModelFactory;
+import pl.project.budgetassistant.ui.viewmodels.ExpenseBaseViewModel;
+import pl.project.budgetassistant.ui.viewmodels.UserProfileBaseViewModel;
 
 
 public abstract class BaseExpenseActivity extends BaseActivity {
