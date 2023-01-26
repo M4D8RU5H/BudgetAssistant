@@ -19,8 +19,6 @@ import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.base.BaseActivity;
 import pl.project.budgetassistant.exceptions.EmptyStringException;
 import pl.project.budgetassistant.exceptions.ZeroBalanceDifferenceException;
-import pl.project.budgetassistant.persistence.firebase.QueryResult;
-import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.models.Expense;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;

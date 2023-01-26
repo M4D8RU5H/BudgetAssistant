@@ -34,13 +34,10 @@ import java.util.Map;
 
 import pl.project.budgetassistant.R;
 import pl.project.budgetassistant.base.BaseFragment;
-import pl.project.budgetassistant.persistence.firebase.QueryResult;
-import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
 import pl.project.budgetassistant.models.User;
 import pl.project.budgetassistant.models.Expense;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
-import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 import pl.project.budgetassistant.persistence.repositories.UserRepository;
 import pl.project.budgetassistant.persistence.viewmodel_factories.TopExpensesStatisticsViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;

@@ -24,11 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pl.project.budgetassistant.persistence.firebase.QueryResult;
-import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.base.BaseFragment;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
-import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 import pl.project.budgetassistant.persistence.repositories.UserRepository;
 import pl.project.budgetassistant.persistence.viewmodels.UserProfileBaseViewModel;
 import pl.project.budgetassistant.util.CalendarHelper;
@@ -52,7 +49,7 @@ public class HomeFragment extends BaseFragment {
     private UserProfileBaseViewModel userViewModel;
     private UserRepository userRepo;
 
-    public static final CharSequence TITLE = "Strona główna";
+    public static final CharSequence TITLE = "Podsumowanie";
     private Gauge gauge;
     private TopCategoriesAdapter adapter;
     private ArrayList<TopCategoryListViewModel> categoryModelsHome;
@@ -103,7 +100,6 @@ public class HomeFragment extends BaseFragment {
 
         userViewModel.setUpdateCommand(() -> {
             user = userRepo.getCurrentUser();
-
             if (user == null) return;
 
             Calendar startDate = CalendarHelper.getUserPeriodStartDate(user);

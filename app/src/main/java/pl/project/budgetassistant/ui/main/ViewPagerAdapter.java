@@ -22,11 +22,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return HomeFragment.newInstance();
+                return StatisticsFragment.newInstance();
             case 1:
                 return HistoryFragment.newInstance();
             case 2:
-                return StatisticsFragment.newInstance();
+                return HomeFragment.newInstance();
         }
         return null;
     }
@@ -40,13 +40,13 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return HomeFragment.TITLE;
+                return StatisticsFragment.TITLE;
 
             case 1:
                 return HistoryFragment.TITLE;
 
             case 2:
-                return StatisticsFragment.TITLE;
+                return HomeFragment.TITLE;
         }
         return super.getPageTitle(position);
     }

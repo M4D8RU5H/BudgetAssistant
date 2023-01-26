@@ -20,11 +20,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import pl.project.budgetassistant.R;
-import pl.project.budgetassistant.persistence.firebase.QueryResult;
-import pl.project.budgetassistant.persistence.firebase.FirebaseObserver;
 import pl.project.budgetassistant.persistence.firebase.ListDataSet;
 import pl.project.budgetassistant.persistence.repositories.ExpenseRepository;
-import pl.project.budgetassistant.persistence.repositories.UpdateCommand;
 import pl.project.budgetassistant.persistence.repositories.UserRepository;
 import pl.project.budgetassistant.persistence.viewmodel_factories.UserProfileViewModelFactory;
 import pl.project.budgetassistant.persistence.viewmodel_factories.ExpensesHistoryViewModelFactory;
