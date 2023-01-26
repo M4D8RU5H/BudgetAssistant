@@ -132,6 +132,8 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void dataUpdated() {
+        user = userRepo.getCurrentUser();
+
         if (user == null || expenses == null || getContext() == null) return;
 
         List<Expense> expenseList = new ArrayList<>(expenses.getList());

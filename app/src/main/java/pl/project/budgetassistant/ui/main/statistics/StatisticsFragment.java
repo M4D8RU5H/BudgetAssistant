@@ -114,7 +114,7 @@ public class StatisticsFragment extends BaseFragment {
     }
 
     private void dataUpdated() {
-        if (getContext() == null) return;
+        if (getContext() == null || user == null) return;
 
         if (startDate != null && endDate != null && expenses != null) {
             List<Expense> expenseList = new ArrayList<>(expenses.getList());

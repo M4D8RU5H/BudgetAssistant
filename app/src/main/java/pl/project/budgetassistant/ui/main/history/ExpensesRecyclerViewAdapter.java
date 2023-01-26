@@ -128,6 +128,8 @@ public class ExpensesRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseHol
                     public void onClick(DialogInterface dialog, int whichButton) {
                         expenseRepo.remove(id);
 
+                        user =userRepo.getCurrentUser();
+
                         user.budget.spentAmount -= balanceDifference;
                         userRepo.update(user);
 

@@ -32,7 +32,6 @@ public class EditExpenseActivity extends BaseExpenseActivity {
     private Expense expense;
     private String expenseUid;
     private Button editExpenseButton;
-    private Button removeExpenseButton;
 
     @Override
     protected void configureUI() {
@@ -42,7 +41,6 @@ public class EditExpenseActivity extends BaseExpenseActivity {
         getSupportActionBar().setTitle("Edytuj wydatek");
 
         editExpenseButton = findViewById(R.id.edit_entry_button);
-        removeExpenseButton = findViewById(R.id.remove_entry_button);
 
         editExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,23 +55,6 @@ public class EditExpenseActivity extends BaseExpenseActivity {
                 } catch (ZeroBalanceDifferenceException e) {
                     selectAmountInputLayout.setError(e.getMessage());
                 }
-            }
-        });
-
-        removeExpenseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showRemoveExpenseDialog();
-            }
-
-            public void showRemoveExpenseDialog() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditExpenseActivity.this);
-                builder.setMessage("Jesteś pewien?").setPositiveButton("Tak", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        removeExpense();
-                    }
-                }).setNegativeButton("Nie", null).show();
             }
         });
 
