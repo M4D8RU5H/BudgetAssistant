@@ -45,6 +45,7 @@ public class AddExpenseActivity extends BaseExpenseActivity {
         });
     }
 
+    @Override
     protected void dateUpdated() {
         if (user == null) return;
 
@@ -57,6 +58,7 @@ public class AddExpenseActivity extends BaseExpenseActivity {
         CurrencyHelper.setupAmountEditText(selectAmountEditText, user);
     }
 
+    @Override
     protected void modifyExpense(long amount, Date entryDate, String entryCategory, String entryName) throws ZeroBalanceDifferenceException, EmptyStringException {
         if (amount == 0) {
             throw new ZeroBalanceDifferenceException("Różnica środków nie powinna wynosić 0");

@@ -55,6 +55,7 @@ public class EditExpenseActivity extends BaseExpenseActivity {
         });
     }
 
+    @Override
     protected void dateUpdated() {
         if (expense == null || user == null) return;
 
@@ -86,7 +87,7 @@ public class EditExpenseActivity extends BaseExpenseActivity {
 
     }
 
-
+    @Override
     protected void modifyExpense(long amount, Date entryDate, String entryCategory, String entryName) throws EmptyStringException, ZeroBalanceDifferenceException {
 
         if (amount == 0) {
@@ -103,15 +104,6 @@ public class EditExpenseActivity extends BaseExpenseActivity {
 
         user.budget.spentAmount += finalBalanceDifference;
         userRepo.update(user);
-
-        finish();
-    }
-
-    private void removeExpense() {
-        user.budget.spentAmount -= expense.amount;
-        userRepo.update(user);
-
-        expenseRepo.remove(expenseUid);
 
         finish();
     }
